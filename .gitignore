@@ -1,0 +1,5 @@
+# Local Netlify folder
+.netlify
+
+# Do not track mobile app binaries in website repo
+*.apk
