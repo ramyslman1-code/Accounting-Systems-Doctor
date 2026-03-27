@@ -87,18 +87,31 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
       align-items: center;
       padding: 48px 0 24px;
     }
 
     .hero-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(31,157,69,.09), transparent 42%),
+        radial-gradient(circle at 88% 0%, rgba(11,79,156,.11), transparent 38%),
+        var(--surface);
+      border: 1px solid #cfe0f3;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 24px;
+      box-shadow: 0 16px 34px rgba(11,79,156,.14);
+      padding: 30px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,.45), rgba(255,255,255,0));
     }
 
     h1 {
@@ -112,10 +125,11 @@
       color: var(--muted);
       line-height: 1.9;
       font-size: 1rem;
+      max-width: 62ch;
     }
 
     .cta {
-      margin-top: 18px;
+      margin-top: 22px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -124,48 +138,70 @@
     .btn {
       border: 0;
       border-radius: 12px;
-      padding: 11px 16px;
+      padding: 12px 18px;
       font-weight: 800;
       cursor: pointer;
       text-decoration: none;
-      transition: transform .15s ease, background .15s ease;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
     .btn.primary {
-      background: var(--success);
+      background: linear-gradient(135deg, #1f9d45, #16a34a);
       color: #fff;
+      box-shadow: 0 10px 22px rgba(22,163,74,.27);
     }
 
     .btn.primary:hover {
       background: #17833a;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .btn.secondary {
-      background: var(--accent);
+      background: #fff6ea;
       color: var(--primary-2);
-      border: 1px solid #bde7df;
+      border: 1px solid #e7d7bf;
+      box-shadow: 0 8px 16px rgba(12,47,88,.08);
+    }
+
+    .btn.secondary:hover {
+      transform: translateY(-2px);
+      background: #ffefd8;
     }
 
     .hero-stat {
-      background: linear-gradient(145deg, var(--primary), var(--success));
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #0a4a95, #0e7f6d 58%, #1f9d45);
       color: #fff;
       border-radius: var(--radius);
-      padding: 26px;
-      box-shadow: var(--shadow);
+      padding: 28px;
+      box-shadow: 0 16px 34px rgba(8,61,121,.27);
+      border: 1px solid rgba(255,255,255,.24);
+    }
+
+    .hero-stat::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: -75px;
+      left: -70px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.34), rgba(255,255,255,0) 70%);
     }
 
     .hero-stat h3 {
       margin: 0 0 8px;
       font-size: 1.1rem;
+      letter-spacing: .2px;
     }
 
     .hero-stat p {
       margin: 0;
-      opacity: .9;
+      opacity: .95;
       line-height: 1.8;
     }
 
@@ -457,9 +493,11 @@
     }
 
     .partner-card img {
+      display: block;
       width: 100%;
-      max-width: 160px;
-      height: 90px;
+      max-width: 220px;
+      max-height: 180px;
+      height: auto;
       object-fit: contain;
     }
 
@@ -480,6 +518,13 @@
     @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
+        gap: 14px;
+        padding-top: 30px;
+      }
+
+      .hero-card,
+      .hero-stat {
+        padding: 20px;
       }
 
       .request-form {
@@ -633,7 +678,10 @@
 
         <div class="demo-placeholder" id="cloud-demo-placeholder">
           <h3>صفحة الديمو | Demo Page</h3>
-          <p>تم تجهيز مكان صفحة الديمو. عند تزويدنا بالرابط أو الملفات سيتم ربطها هنا مباشرة.</p>
+          <p>
+            رابط ديمو برنامج طبيب المتاجر متاح الآن:
+            <a href="https://das-erp-demo.vercel.app" target="_blank" rel="noopener">https://das-erp-demo.vercel.app</a>
+          </p>
         </div>
       </article>
     </section>
@@ -657,11 +705,11 @@
     </section>
 
     <section id="partners" class="partners-section">
-      <h2 class="section-title">الشركات المشتركة بالتطبيقات | Application Partner Companies</h2>
+      <h2 class="section-title">شركاؤنا | Our Partners</h2>
       <div class="partners-grid">
         <div class="partner-card">
-          <img src="/taj-albanan-logo.png" alt="شعار مؤسسة تاج البنان لمواد البناء" />
-          <span class="partner-name">مؤسسة تاج البنان لمواد البناء</span>
+          <img src="/taj-albanan-logo.jpeg" alt="" />
+          <span class="partner-name">تاج البنان لمواد البناء</span>
         </div>
         <div class="partner-card">مكان مخصص لشركة مشتركة بالتطبيقات<br />Subscribed Company Slot</div>
         <div class="partner-card">مكان مخصص لشركة مشتركة بالتطبيقات<br />Subscribed Company Slot</div>
