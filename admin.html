@@ -258,6 +258,10 @@
             <input type="text" id="footerText" />
           </div>
         </div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('general')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('general')">مسح هذا القسم</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -288,6 +292,10 @@
             <input type="text" id="heroSecondaryHref" />
           </div>
         </div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('hero')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('hero')">مسح هذا القسم</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -299,6 +307,10 @@
         <div class="form-group">
           <label>نصوص المربع، كل سطر عنصر | Box Items, one per line</label>
           <textarea id="statsItems"></textarea>
+        </div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('stats')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('stats')">مسح هذا القسم</button>
         </div>
       </div>
 
@@ -350,6 +362,10 @@
           </div>
           <div class="form-group"><label>الوصف</label><textarea id="program2Description"></textarea></div>
         </div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('programs')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('programs')">مسح هذا القسم</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -368,6 +384,10 @@
         </div>
         <div class="form-group"><label>ملاحظة القسم</label><textarea id="cloudNote"></textarea></div>
         <div class="form-group"><label>النص قبل رابط الديمو</label><textarea id="cloudDemoText"></textarea></div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('cloud')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('cloud')">مسح هذا القسم</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -400,6 +420,10 @@
             <div class="form-group"><label>الرابط</label><input type="text" id="contact2Href" /></div>
           </div>
         </div>
+        <div class="actions-bar">
+          <button class="btn btn-success" onclick="saveSection('contacts')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('contacts')">مسح هذا القسم</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -418,6 +442,8 @@
         </div>
         <div class="actions-bar">
           <button class="btn btn-primary" onclick="addPartner()">إضافة شريك | Add Partner</button>
+          <button class="btn btn-success" onclick="saveSection('partners')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('partners')">حذف كل الشركاء</button>
         </div>
         <div id="partnersList" class="partners-list"></div>
       </div>
@@ -781,6 +807,90 @@
       localStorage.setItem('siteData', JSON.stringify(siteData));
       localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
       alert('تم حفظ التغييرات محليًا. افتح الصفحة الرئيسية وستظهر التعديلات على هذا الجهاز.');
+    }
+
+    function saveSection(sectionName) {
+      siteData = gatherSiteData();
+      localStorage.setItem('siteData', JSON.stringify(siteData));
+      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      alert(`تم حفظ قسم ${sectionName} محليًا.`);
+    }
+
+    function clearSection(sectionName) {
+      if (!confirm('هل أنت متأكد من مسح هذا القسم؟')) {
+        return;
+      }
+
+      if (sectionName === 'general') {
+        document.getElementById('brandName').value = '';
+        document.getElementById('headerContactText').value = '';
+        document.getElementById('headerContactHref').value = '';
+        document.getElementById('footerText').value = '';
+      }
+
+      if (sectionName === 'hero') {
+        document.getElementById('heroTitle').value = '';
+        document.getElementById('heroLead').value = '';
+        document.getElementById('heroPrimaryText').value = '';
+        document.getElementById('heroPrimaryHref').value = '';
+        document.getElementById('heroSecondaryText').value = '';
+        document.getElementById('heroSecondaryHref').value = '';
+      }
+
+      if (sectionName === 'stats') {
+        document.getElementById('statsTitle').value = '';
+        document.getElementById('statsItems').value = '';
+      }
+
+      if (sectionName === 'programs') {
+        document.getElementById('programsSectionTitle').value = '';
+        for (let i = 0; i < 3; i += 1) {
+          document.getElementById(`program${i}Title`).value = '';
+          document.getElementById(`program${i}Description`).value = '';
+          document.getElementById(`program${i}Price`).value = '';
+          document.getElementById(`program${i}Platform`).value = '';
+          document.getElementById(`program${i}DownloadHref`).value = '';
+          document.getElementById(`program${i}DownloadText`).value = '';
+          document.getElementById(`program${i}LicenseHref`).value = '';
+          document.getElementById(`program${i}LicenseText`).value = '';
+        }
+      }
+
+      if (sectionName === 'cloud') {
+        document.getElementById('cloudTitle').value = '';
+        document.getElementById('cloudDescription').value = '';
+        document.getElementById('cloudBadges').value = '';
+        document.getElementById('cloudRequestAction').value = '';
+        document.getElementById('cloudRequestButtonText').value = '';
+        document.getElementById('cloudMobileButtonText').value = '';
+        document.getElementById('cloudMobileButtonHref').value = '';
+        document.getElementById('cloudNote').value = '';
+        document.getElementById('cloudDemoTitle').value = '';
+        document.getElementById('cloudDemoText').value = '';
+        document.getElementById('cloudDemoHref').value = '';
+        document.getElementById('cloudDemoLinkText').value = '';
+      }
+
+      if (sectionName === 'contacts') {
+        document.getElementById('contactSectionTitle').value = '';
+        for (let i = 0; i < 3; i += 1) {
+          document.getElementById(`contact${i}Label`).value = '';
+          document.getElementById(`contact${i}Value`).value = '';
+          document.getElementById(`contact${i}Href`).value = '';
+        }
+      }
+
+      if (sectionName === 'partners') {
+        document.getElementById('partnersSectionTitle').value = '';
+        siteData.partners = [];
+        localStorage.setItem('partners', JSON.stringify(siteData.partners));
+        renderPartners();
+      }
+
+      siteData = gatherSiteData();
+      localStorage.setItem('siteData', JSON.stringify(siteData));
+      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      alert(`تم مسح قسم ${sectionName}.`);
     }
 
     function downloadSiteData() {
