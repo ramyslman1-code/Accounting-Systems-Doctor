@@ -537,245 +537,309 @@
 </head>
 <body>
   <header>
-    <div class="container nav">
-      <div class="brand">
-        <img src="/site-logo.png" alt="Accounting Systems Doctor Logo" />
-        <span>Accounting Systems Doctor</span>
-      </div>
-      <a class="contact" href="#contact">تواصل معنا | Contact Us</a>
-    </div>
+    <div class="container nav" id="navRoot"></div>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <article class="hero-card">
-        <h1>حلول محاسبية جاهزة لنمو أعمالك | Ready Accounting Solutions for Business Growth</h1>
-        <p class="lead">منصة احترافية لعرض البرامج المحاسبية وبيعها مباشرة. ,تلبية طلبات العملاء , انشاء برامج خاصة حسب طلب العميل</p>
-        <div class="cta">
-          <a class="btn primary" href="#programs">Browse Programs</a>
-          <a class="btn secondary" href="#">Request Consultation</a>
-        </div>
-      </article>
+  <main class="container" id="siteRoot"></main>
 
-      <aside class="hero-stat">
-        <h3>إحصاءات سريعة | Quick Metrics</h3>
-        <p>+150 عميل استخدم الحلول المحاسبية</p>
-        <p>دعم فني مباشر بعد الشراء</p>
-        <p>تهيئة وربط حسب نشاطك التجاري</p>
-      </aside>
-    </section>
-
-    <section id="programs">
-      <h2 class="section-title">تطبيقات الجوال المتاحة | Available Mobile Apps</h2>
-      <div class="programs">
-        <article class="card">
-          <div class="icon">🧾</div>
-          <h4>طبيب الجرد | Inventory Doctor</h4>
-          <p>برنامج لإدارة المخزون والجرد والباركود وحساب الأرباح بسهولة. شروط التشغيل: يعمل على أجهزة Android فقط.</p>
-          <div class="row">
-            <span class="price">500 ريال</span>
-            <span>Android Only</span>
-          </div>
-          <div class="card-actions">
-            <a class="buy download-btn" href="/inventory-doctor.apk" target="_blank" rel="noopener">تحميل مباشر من هنا</a>
-            <a class="buy" href="https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D8%AC%D8%B1%D8%AF" target="_blank" rel="noopener">اطلب الترخيص عبر واتساب</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="icon"><img src="/gas-sales-logo.png" alt="Gas Sales Doctor Logo" /></div>
-          <h4>طبيب المحطات | Gas Sales Doctor</h4>
-          <p>تطبيق لإدارة مبيعات ومشتريات محطات الوقود ومحلات بيع اسطوانات الغاز. شروط التشغيل: يعمل على أجهزة Android فقط.</p>
-          <div class="row">
-            <span class="price">1000 ريال</span>
-            <span>Android Only</span>
-          </div>
-          <div class="card-actions">
-            <a class="buy download-btn" href="/gas-sales-doctor.apk" target="_blank" rel="noopener">تحميل مباشر من هنا</a>
-            <a class="buy" href="https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%B7%D8%A7%D8%AA" target="_blank" rel="noopener">اطلب الترخيص عبر واتساب</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="icon"><img src="/salesman-logo.png" alt="Salesman Doctor Logo" /></div>
-          <h4>طبيب مندوب المبيعات | Salesman Doctor</h4>
-          <p>تطبيق لإدارة المبيعات والمشتريات والمخزون والسندات المالية ميدانياً لمندوبي المبيعات. شروط التشغيل: يعمل على أجهزة Android فقط.</p>
-          <div class="row">
-            <span class="price">1000 ريال</span>
-            <span>Android Only</span>
-          </div>
-          <div class="card-actions">
-            <a class="buy download-btn" href="/salesman-doctor.apk" target="_blank" rel="noopener">تحميل مباشر من هنا</a>
-            <a class="buy" href="https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D9%85%D9%86%D8%AF%D9%88%D8%A8%20%D8%A7%D9%84%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA" target="_blank" rel="noopener">اطلب الترخيص عبر واتساب</a>
-          </div>
-        </article>
-      </div>
-
-    </section>
-
-    <section id="cloud-program" class="cloud-section">
-      <h2 class="section-title">البرنامج المحاسبي السحابي | Cloud Accounting Program</h2>
-      <article class="cloud-card">
-        <p>هذا المنتج مخصص للإدارة السحابية للمتاجر ونقاط البيع، ويختلف عن تطبيقات الجوال. يمكن تشغيله داخل المنشأة مع صلاحيات متعددة وتقارير تفصيلية ومتابعة العمليات لحظياً.</p>
-        <div class="cloud-badges">
-          <span>سحابي بالكامل</span>
-          <span>صلاحيات مستخدمين</span>
-          <span>تقارير تشغيلية ومالية</span>
-          <span>مناسب للمتاجر ونقاط البيع</span>
-        </div>
-
-        <form class="request-form" action="mailto:doctorsystem8@gmail.com" method="post" enctype="text/plain">
-          <div class="field">
-            <label for="companyName">اسم المنشأة | Company Name</label>
-            <input id="companyName" name="companyName" type="text" required />
-          </div>
-
-          <div class="field">
-            <label for="managerName">اسم المسؤول | Contact Person</label>
-            <input id="managerName" name="managerName" type="text" required />
-          </div>
-
-          <div class="field">
-            <label for="mobileNumber">رقم الجوال | Mobile Number</label>
-            <input id="mobileNumber" name="mobileNumber" type="tel" required />
-          </div>
-
-          <div class="field">
-            <label for="emailAddress">البريد الإلكتروني | Email Address</label>
-            <input id="emailAddress" name="emailAddress" type="email" required />
-          </div>
-
-          <div class="field">
-            <label for="city">المدينة | City</label>
-            <input id="city" name="city" type="text" />
-          </div>
-
-          <div class="field">
-            <label for="businessType">نوع النشاط | Business Type</label>
-            <input id="businessType" name="businessType" type="text" />
-          </div>
-
-          <div class="field">
-            <label for="branches">عدد الفروع | Number of Branches</label>
-            <input id="branches" name="branches" type="number" min="1" />
-          </div>
-
-          <div class="field">
-            <label for="usersCount">عدد المستخدمين | Number of Users</label>
-            <input id="usersCount" name="usersCount" type="number" min="1" />
-          </div>
-
-          <div class="field full">
-            <label for="requirements">تفاصيل الطلب | Requirements</label>
-            <textarea id="requirements" name="requirements" placeholder="اكتب احتياجك، نوع التقارير المطلوبة، ونقاط التكامل..."></textarea>
-          </div>
-
-          <div class="submit-row">
-            <button class="btn primary" type="submit">إرسال الطلب عبر البريد | Send Request by Email</button>
-            <a class="btn secondary" href="https://wa.me/966598861163" target="_blank" rel="noopener">إرسال عبر الجوال (واتساب) | Send via Mobile</a>
-          </div>
-        </form>
-
-        <p class="meta-note">ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.</p>
-
-        <div class="demo-placeholder" id="cloud-demo-placeholder">
-          <h3>صفحة الديمو | Demo Page</h3>
-          <p>
-            رابط ديمو برنامج طبيب المتاجر متاح الآن:
-            <a href="https://das-erp-demo.vercel.app" target="_blank" rel="noopener">https://das-erp-demo.vercel.app</a>
-          </p>
-        </div>
-      </article>
-    </section>
-
-    <section id="contact" class="contact-hub">
-      <h2 class="section-title">قنوات التواصل | Contact Channels</h2>
-      <div class="contact-grid">
-        <a class="contact-item" href="https://wa.me/966598861163" target="_blank" rel="noopener">
-          <span class="label">WhatsApp</span>
-          <strong>+966598861163</strong>
-        </a>
-        <a class="contact-item" href="mailto:doctorsystem8@gmail.com">
-          <span class="label">Email</span>
-          <strong>doctorsystem8@gmail.com</strong>
-        </a>
-        <a class="contact-item" href="https://t.me/systemsdoctor" target="_blank" rel="noopener">
-          <span class="label">Telegram Channel</span>
-          <strong>t.me/systemsdoctor</strong>
-        </a>
-      </div>
-    </section>
-
-    <section id="partners" class="partners-section">
-      <h2 class="section-title">شركاؤنا | Our Partners</h2>
-      <div class="partners-grid" id="partnersContainer">
-        
-      </div>
-    </section>
-
-    <script>
-      function renderPartners(partners) {
-        const container = document.getElementById('partnersContainer');
-        if (!Array.isArray(partners) || partners.length === 0) {
-          container.innerHTML = '<p style="color: var(--muted); text-align: center;">لا يوجد شركاء مضافون بعد.</p>';
-          return;
+  <script>
+    const fallbackSiteData = {
+      brandName: 'Accounting Systems Doctor',
+      headerContactText: 'تواصل معنا | Contact Us',
+      headerContactHref: '#contact',
+      hero: {
+        title: 'حلول محاسبية جاهزة لنمو أعمالك | Ready Accounting Solutions for Business Growth',
+        lead: 'منصة احترافية لعرض البرامج المحاسبية وبيعها مباشرة. ,تلبية طلبات العملاء , انشاء برامج خاصة حسب طلب العميل',
+        primaryButtonText: 'Browse Programs',
+        primaryButtonHref: '#programs',
+        secondaryButtonText: 'Request Consultation',
+        secondaryButtonHref: '#cloud-program'
+      },
+      heroStats: {
+        title: 'إحصاءات سريعة | Quick Metrics',
+        items: ['+150 عميل استخدم الحلول المحاسبية', 'دعم فني مباشر بعد الشراء', 'تهيئة وربط حسب نشاطك التجاري']
+      },
+      programsSectionTitle: 'تطبيقات الجوال المتاحة | Available Mobile Apps',
+      programs: [
+        {
+          iconType: 'emoji',
+          iconValue: '🧾',
+          iconAlt: 'Inventory Doctor Icon',
+          title: 'طبيب الجرد | Inventory Doctor',
+          description: 'برنامج لإدارة المخزون والجرد والباركود وحساب الأرباح بسهولة. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '500 ريال',
+          platform: 'Android Only',
+          downloadHref: '/inventory-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D8%AC%D8%B1%D8%AF',
+          licenseText: 'اطلب الترخيص عبر واتساب'
+        },
+        {
+          iconType: 'image',
+          iconValue: '/gas-sales-logo.png',
+          iconAlt: 'Gas Sales Doctor Logo',
+          title: 'طبيب المحطات | Gas Sales Doctor',
+          description: 'تطبيق لإدارة مبيعات ومشتريات محطات الوقود ومحلات بيع اسطوانات الغاز. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '1000 ريال',
+          platform: 'Android Only',
+          downloadHref: '/gas-sales-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%B7%D8%A7%D8%AA',
+          licenseText: 'اطلب الترخيص عبر واتساب'
+        },
+        {
+          iconType: 'image',
+          iconValue: '/salesman-logo.png',
+          iconAlt: 'Salesman Doctor Logo',
+          title: 'طبيب مندوب المبيعات | Salesman Doctor',
+          description: 'تطبيق لإدارة المبيعات والمشتريات والمخزون والسندات المالية ميدانياً لمندوبي المبيعات. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '1000 ريال',
+          platform: 'Android Only',
+          downloadHref: '/salesman-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D9%85%D9%86%D8%AF%D9%88%D8%A8%20%D8%A7%D9%84%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA',
+          licenseText: 'اطلب الترخيص عبر واتساب'
         }
+      ],
+      cloud: {
+        title: 'البرنامج المحاسبي السحابي | Cloud Accounting Program',
+        description: 'هذا المنتج مخصص للإدارة السحابية للمتاجر ونقاط البيع، ويختلف عن تطبيقات الجوال. يمكن تشغيله داخل المنشأة مع صلاحيات متعددة وتقارير تفصيلية ومتابعة العمليات لحظياً.',
+        badges: ['سحابي بالكامل', 'صلاحيات مستخدمين', 'تقارير تشغيلية ومالية', 'مناسب للمتاجر ونقاط البيع'],
+        requestFormAction: 'mailto:doctorsystem8@gmail.com',
+        requestButtonText: 'إرسال الطلب عبر البريد | Send Request by Email',
+        mobileButtonText: 'إرسال عبر الجوال (واتساب) | Send via Mobile',
+        mobileButtonHref: 'https://wa.me/966598861163',
+        note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
+        demoTitle: 'صفحة الديمو | Demo Page',
+        demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
+        demoHref: 'https://das-erp-demo.vercel.app',
+        demoLinkText: 'https://das-erp-demo.vercel.app'
+      },
+      contactSectionTitle: 'قنوات التواصل | Contact Channels',
+      contacts: [
+        { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
+        { label: 'Email', value: 'doctorsystem8@gmail.com', href: 'mailto:doctorsystem8@gmail.com' },
+        { label: 'Telegram Channel', value: 't.me/systemsdoctor', href: 'https://t.me/systemsdoctor' }
+      ],
+      partnersSectionTitle: 'شركاؤنا | Our Partners',
+      partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
+      footerText: '© 2026 Accounting Systems Doctor'
+    };
 
-        container.innerHTML = partners.map(partner => `
-          <div class="partner-card">
-            <img src="${partner.image}" alt="${partner.name}" />
-            <span class="partner-name">${partner.name}</span>
+    function renderPrograms(programs) {
+      return (programs || []).map(program => `
+        <article class="card">
+          <div class="icon">${program.iconType === 'image' ? `<img src="${program.iconValue}" alt="${program.iconAlt || ''}" />` : program.iconValue}</div>
+          <h4>${program.title || ''}</h4>
+          <p>${program.description || ''}</p>
+          <div class="row">
+            <span class="price">${program.price || ''}</span>
+            <span>${program.platform || ''}</span>
           </div>
-        `).join('');
+          <div class="card-actions">
+            <a class="buy download-btn" href="${program.downloadHref || '#'}" target="_blank" rel="noopener">${program.downloadText || ''}</a>
+            <a class="buy" href="${program.licenseHref || '#'}" target="_blank" rel="noopener">${program.licenseText || ''}</a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderContacts(contacts) {
+      return (contacts || []).map(contact => `
+        <a class="contact-item" href="${contact.href || '#'}" target="_blank" rel="noopener">
+          <span class="label">${contact.label || ''}</span>
+          <strong>${contact.value || ''}</strong>
+        </a>
+      `).join('');
+    }
+
+    function renderPartners(partners) {
+      if (!Array.isArray(partners) || partners.length === 0) {
+        return '<p style="color: var(--muted); text-align: center;">لا يوجد شركاء مضافون بعد.</p>';
       }
 
-      async function loadPartners() {
-        const savedPartners = localStorage.getItem('partners');
-        if (savedPartners) {
-          try {
-            const localPartners = JSON.parse(savedPartners);
-            if (Array.isArray(localPartners) && localPartners.length > 0) {
-              renderPartners(localPartners);
-              return;
-            }
-          } catch (error) {
-            console.error('Error reading local partners:', error);
-          }
-        }
+      return partners.map(partner => `
+        <div class="partner-card">
+          <img src="${partner.image}" alt="${partner.name || ''}" />
+          <span class="partner-name">${partner.name || ''}</span>
+        </div>
+      `).join('');
+    }
 
-        try {
-          const response = await fetch('partners.json');
-          if (!response.ok) throw new Error('Failed to load partners');
-          const partners = await response.json();
-          renderPartners(partners);
-        } catch (error) {
-          console.error('Error loading partners:', error);
-          document.getElementById('partnersContainer').innerHTML = `
-            <div class="partner-card">
-              <img src="/taj-albanan-logo.jpeg" alt="" />
-              <span class="partner-name">تاج البنان لمواد البناء</span>
+    function renderStats(items) {
+      return (items || []).map(item => `<p>${item}</p>`).join('');
+    }
+
+    function renderBadges(items) {
+      return (items || []).map(item => `<span>${item}</span>`).join('');
+    }
+
+    function renderSite(data) {
+      document.getElementById('navRoot').innerHTML = `
+        <div class="brand">
+          <img src="/site-logo.png" alt="Accounting Systems Doctor Logo" />
+          <span>${data.brandName || ''}</span>
+        </div>
+        <a class="contact" href="${data.headerContactHref || '#contact'}">${data.headerContactText || ''}</a>
+      `;
+
+      document.getElementById('footerRoot').textContent = data.footerText || '© 2026 Accounting Systems Doctor';
+
+      document.getElementById('siteRoot').innerHTML = `
+        <section class="hero">
+          <article class="hero-card">
+            <h1>${data.hero?.title || ''}</h1>
+            <p class="lead">${data.hero?.lead || ''}</p>
+            <div class="cta">
+              <a class="btn primary" href="${data.hero?.primaryButtonHref || '#programs'}">${data.hero?.primaryButtonText || ''}</a>
+              <a class="btn secondary" href="${data.hero?.secondaryButtonHref || '#cloud-program'}">${data.hero?.secondaryButtonText || ''}</a>
             </div>
-            <div class="partner-card">مكان مخصص لشركة مشتركة بالتطبيقات<br />Subscribed Company Slot</div>
-            <div class="partner-card">مكان مخصص لشركة مشتركة بالتطبيقات<br />Subscribed Company Slot</div>
-          `;
+          </article>
+
+          <aside class="hero-stat">
+            <h3>${data.heroStats?.title || ''}</h3>
+            ${renderStats(data.heroStats?.items)}
+          </aside>
+        </section>
+
+        <section id="programs">
+          <h2 class="section-title">${data.programsSectionTitle || ''}</h2>
+          <div class="programs">${renderPrograms(data.programs)}</div>
+        </section>
+
+        <section id="cloud-program" class="cloud-section">
+          <h2 class="section-title">${data.cloud?.title || ''}</h2>
+          <article class="cloud-card">
+            <p>${data.cloud?.description || ''}</p>
+            <div class="cloud-badges">${renderBadges(data.cloud?.badges)}</div>
+
+            <form class="request-form" action="${data.cloud?.requestFormAction || 'mailto:doctorsystem8@gmail.com'}" method="post" enctype="text/plain">
+              <div class="field">
+                <label for="companyName">اسم المنشأة | Company Name</label>
+                <input id="companyName" name="companyName" type="text" required />
+              </div>
+
+              <div class="field">
+                <label for="managerName">اسم المسؤول | Contact Person</label>
+                <input id="managerName" name="managerName" type="text" required />
+              </div>
+
+              <div class="field">
+                <label for="mobileNumber">رقم الجوال | Mobile Number</label>
+                <input id="mobileNumber" name="mobileNumber" type="tel" required />
+              </div>
+
+              <div class="field">
+                <label for="emailAddress">البريد الإلكتروني | Email Address</label>
+                <input id="emailAddress" name="emailAddress" type="email" required />
+              </div>
+
+              <div class="field">
+                <label for="city">المدينة | City</label>
+                <input id="city" name="city" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="businessType">نوع النشاط | Business Type</label>
+                <input id="businessType" name="businessType" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="branches">عدد الفروع | Number of Branches</label>
+                <input id="branches" name="branches" type="number" min="1" />
+              </div>
+
+              <div class="field">
+                <label for="usersCount">عدد المستخدمين | Number of Users</label>
+                <input id="usersCount" name="usersCount" type="number" min="1" />
+              </div>
+
+              <div class="field full">
+                <label for="requirements">تفاصيل الطلب | Requirements</label>
+                <textarea id="requirements" name="requirements" placeholder="اكتب احتياجك، نوع التقارير المطلوبة، ونقاط التكامل..."></textarea>
+              </div>
+
+              <div class="submit-row">
+                <button class="btn primary" type="submit">${data.cloud?.requestButtonText || ''}</button>
+                <a class="btn secondary" href="${data.cloud?.mobileButtonHref || '#'}" target="_blank" rel="noopener">${data.cloud?.mobileButtonText || ''}</a>
+              </div>
+            </form>
+
+            <p class="meta-note">${data.cloud?.note || ''}</p>
+
+            <div class="demo-placeholder" id="cloud-demo-placeholder">
+              <h3>${data.cloud?.demoTitle || ''}</h3>
+              <p>
+                ${data.cloud?.demoText || ''}
+                <a href="${data.cloud?.demoHref || '#'}" target="_blank" rel="noopener">${data.cloud?.demoLinkText || ''}</a>
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <section id="contact" class="contact-hub">
+          <h2 class="section-title">${data.contactSectionTitle || ''}</h2>
+          <div class="contact-grid">${renderContacts(data.contacts)}</div>
+        </section>
+
+        <section id="partners" class="partners-section">
+          <h2 class="section-title">${data.partnersSectionTitle || ''}</h2>
+          <div class="partners-grid">${renderPartners(data.partners)}</div>
+        </section>
+
+        <section id="pos-regions-reserve" class="pos-reserve" aria-hidden="true">
+          <h3>POS Regions Reserve</h3>
+          <ul>
+            <li data-region="riyadh"></li>
+            <li data-region="jeddah"></li>
+            <li data-region="dammam"></li>
+          </ul>
+        </section>
+      `;
+    }
+
+    async function loadSiteData() {
+      let data = null;
+
+      const localSiteData = localStorage.getItem('siteData');
+      if (localSiteData) {
+        try {
+          data = JSON.parse(localSiteData);
+        } catch (error) {
+          console.error('Error reading local site data:', error);
         }
       }
 
-      loadPartners();
-    </script>
+      if (!data) {
+        try {
+          const response = await fetch('site-data.json');
+          if (!response.ok) throw new Error('Failed to load site data');
+          data = await response.json();
+        } catch (error) {
+          console.error('Error loading site data:', error);
+          data = fallbackSiteData;
+        }
+      }
 
-    <section id="pos-regions-reserve" class="pos-reserve" aria-hidden="true">
-      <h3>POS Regions Reserve</h3>
-      <ul>
-        <li data-region="riyadh"></li>
-        <li data-region="jeddah"></li>
-        <li data-region="dammam"></li>
-      </ul>
-    </section>
+      const savedPartners = localStorage.getItem('partners');
+      if (savedPartners) {
+        try {
+          const localPartners = JSON.parse(savedPartners);
+          if (Array.isArray(localPartners) && localPartners.length > 0) {
+            data.partners = localPartners;
+          }
+        } catch (error) {
+          console.error('Error reading local partners:', error);
+        }
+      }
+
+      renderSite(data);
+    }
+
+    loadSiteData();
+  </script>
   </main>
 
-  <footer>
-    © 2026 Accounting Systems Doctor
-  </footer>
+  <footer id="footerRoot">© 2026 Accounting Systems Doctor</footer>
 </body>
 </html>

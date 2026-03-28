@@ -157,13 +157,68 @@
       border-radius: 4px;
       font-family: monospace;
     }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 110px;
+    }
+    .section-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 18px;
+      background: #fbfdff;
+    }
+    .section-card h2 {
+      margin-top: 0;
+      color: var(--primary-2);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .actions-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .muted-note {
+      color: var(--muted);
+      font-size: .92rem;
+      margin-top: 10px;
+    }
+    .program-block,
+    .contact-block {
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 14px;
+      background: #fff;
+    }
+    .program-block h3,
+    .contact-block h3 {
+      margin-top: 0;
+      color: var(--primary-2);
+    }
+    @media (max-width: 700px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>إدارة الشركاء | Partners Management</h1>
+    <h1>إدارة الموقع | Site Management</h1>
 
-    <!-- Login Section -->
     <div id="loginSection" class="login-section">
       <div class="form-group">
         <label>كلمة المرور | Password:</label>
@@ -175,72 +230,505 @@
       </p>
     </div>
 
-    <!-- Admin Section -->
     <div id="adminSection" class="admin-section hidden">
-      <h2>إضافة شريك جديد | Add New Partner</h2>
-      
-      <div class="form-group">
-        <label>اسم الشريك | Partner Name:</label>
-        <input type="text" id="partnerName" placeholder="مثال: شركة ABC" />
+      <div class="actions-bar">
+        <button class="btn btn-success" onclick="saveLocalData()">حفظ محلي فوري | Save Local Preview</button>
+        <button class="btn btn-primary" onclick="downloadSiteData()">تنزيل site-data.json</button>
+        <button class="btn btn-danger" onclick="logout()">خروج | Logout</button>
       </div>
-      
-      <div class="form-group">
-        <label>شعار الشريك | Partner Logo:</label>
-        <input type="file" id="partnerImage" accept="image/*" onchange="previewImage()" />
-        <img id="imagePreview" class="preview-image hidden" />
+      <p class="muted-note">الحفظ المحلي يطبّق التغييرات فورًا على هذا الجهاز. ولتطبيقها على كل الزوار، نزّل ملف <code>site-data.json</code> ثم ارفعه إلى المشروع وادفع التغييرات.</p>
+
+      <div class="section-card">
+        <h2>الإعدادات العامة | General Settings</h2>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>اسم العلامة | Brand Name</label>
+            <input type="text" id="brandName" />
+          </div>
+          <div class="form-group">
+            <label>نص زر الهيدر | Header Button Text</label>
+            <input type="text" id="headerContactText" />
+          </div>
+          <div class="form-group">
+            <label>رابط زر الهيدر | Header Button Link</label>
+            <input type="text" id="headerContactHref" />
+          </div>
+          <div class="form-group">
+            <label>نص الفوتر | Footer Text</label>
+            <input type="text" id="footerText" />
+          </div>
+        </div>
       </div>
-      
-      <button class="btn btn-primary" onclick="addPartner()">إضافة شريك | Add Partner</button>
-      <button class="btn btn-success" onclick="generateJSON()" style="margin-right: 10px;">حفظ التغييرات | Save Changes</button>
-      
-      <h2 style="margin-top: 30px;">الشركاء الحاليون | Current Partners</h2>
-      <div id="partnersList" class="partners-list"></div>
-      
-      <div class="instructions">
-        <h3>تعليمات الحفظ | Save Instructions:</h3>
-        <ol>
-          <li>بعد إضافة/حذف الشركاء، اضغط على "حفظ التغييرات"</li>
-          <li>انسخ النص الذي سيظهر و احفظه في ملف <code>partners.json</code></li>
-          <li>ارفع الصور إلى مجلد الموقع</li>
-          <li>ادفع التغييرات إلى GitHub</li>
-        </ol>
+
+      <div class="section-card">
+        <h2>الواجهة الرئيسية | Hero Section</h2>
+        <div class="form-group">
+          <label>العنوان الرئيسي | Main Title</label>
+          <textarea id="heroTitle"></textarea>
+        </div>
+        <div class="form-group">
+          <label>النص أسفل العنوان | Lead Text</label>
+          <textarea id="heroLead"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>نص الزر الأول | Primary Button Text</label>
+            <input type="text" id="heroPrimaryText" />
+          </div>
+          <div class="form-group">
+            <label>رابط الزر الأول | Primary Button Link</label>
+            <input type="text" id="heroPrimaryHref" />
+          </div>
+          <div class="form-group">
+            <label>نص الزر الثاني | Secondary Button Text</label>
+            <input type="text" id="heroSecondaryText" />
+          </div>
+          <div class="form-group">
+            <label>رابط الزر الثاني | Secondary Button Link</label>
+            <input type="text" id="heroSecondaryHref" />
+          </div>
+        </div>
       </div>
-      
-      <div id="jsonOutput" class="hidden" style="margin-top: 20px;">
-        <label>انسخ هذا النص واحفظه كملف partners.json:</label>
-        <textarea id="jsonContent" rows="10" style="width: 100%; font-family: monospace; direction: ltr; text-align: left;"></textarea>
+
+      <div class="section-card">
+        <h2>المربع الجانبي | Quick Metrics</h2>
+        <div class="form-group">
+          <label>عنوان المربع | Box Title</label>
+          <input type="text" id="statsTitle" />
+        </div>
+        <div class="form-group">
+          <label>نصوص المربع، كل سطر عنصر | Box Items, one per line</label>
+          <textarea id="statsItems"></textarea>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>تطبيقات الجوال | Mobile Apps</h2>
+        <div class="form-group">
+          <label>عنوان القسم | Section Title</label>
+          <input type="text" id="programsSectionTitle" />
+        </div>
+
+        <div class="program-block">
+          <h3>التطبيق الأول | Program 1</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>العنوان</label><input type="text" id="program0Title" /></div>
+            <div class="form-group"><label>السعر</label><input type="text" id="program0Price" /></div>
+            <div class="form-group"><label>المنصة</label><input type="text" id="program0Platform" /></div>
+            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program0DownloadHref" /></div>
+            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program0DownloadText" /></div>
+            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program0LicenseHref" /></div>
+            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program0LicenseText" /></div>
+          </div>
+          <div class="form-group"><label>الوصف</label><textarea id="program0Description"></textarea></div>
+        </div>
+
+        <div class="program-block">
+          <h3>التطبيق الثاني | Program 2</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>العنوان</label><input type="text" id="program1Title" /></div>
+            <div class="form-group"><label>السعر</label><input type="text" id="program1Price" /></div>
+            <div class="form-group"><label>المنصة</label><input type="text" id="program1Platform" /></div>
+            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program1DownloadHref" /></div>
+            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program1DownloadText" /></div>
+            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program1LicenseHref" /></div>
+            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program1LicenseText" /></div>
+          </div>
+          <div class="form-group"><label>الوصف</label><textarea id="program1Description"></textarea></div>
+        </div>
+
+        <div class="program-block">
+          <h3>التطبيق الثالث | Program 3</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>العنوان</label><input type="text" id="program2Title" /></div>
+            <div class="form-group"><label>السعر</label><input type="text" id="program2Price" /></div>
+            <div class="form-group"><label>المنصة</label><input type="text" id="program2Platform" /></div>
+            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program2DownloadHref" /></div>
+            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program2DownloadText" /></div>
+            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program2LicenseHref" /></div>
+            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program2LicenseText" /></div>
+          </div>
+          <div class="form-group"><label>الوصف</label><textarea id="program2Description"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>البرنامج السحابي | Cloud Section</h2>
+        <div class="form-group"><label>عنوان القسم</label><input type="text" id="cloudTitle" /></div>
+        <div class="form-group"><label>وصف القسم</label><textarea id="cloudDescription"></textarea></div>
+        <div class="form-group"><label>الشارات، كل سطر عنصر | Badges, one per line</label><textarea id="cloudBadges"></textarea></div>
+        <div class="grid-2">
+          <div class="form-group"><label>رابط نموذج الطلب</label><input type="text" id="cloudRequestAction" /></div>
+          <div class="form-group"><label>نص زر البريد</label><input type="text" id="cloudRequestButtonText" /></div>
+          <div class="form-group"><label>نص زر الجوال</label><input type="text" id="cloudMobileButtonText" /></div>
+          <div class="form-group"><label>رابط زر الجوال</label><input type="text" id="cloudMobileButtonHref" /></div>
+          <div class="form-group"><label>عنوان الديمو</label><input type="text" id="cloudDemoTitle" /></div>
+          <div class="form-group"><label>رابط الديمو</label><input type="text" id="cloudDemoHref" /></div>
+          <div class="form-group"><label>نص رابط الديمو</label><input type="text" id="cloudDemoLinkText" /></div>
+        </div>
+        <div class="form-group"><label>ملاحظة القسم</label><textarea id="cloudNote"></textarea></div>
+        <div class="form-group"><label>النص قبل رابط الديمو</label><textarea id="cloudDemoText"></textarea></div>
+      </div>
+
+      <div class="section-card">
+        <h2>قنوات التواصل | Contact Channels</h2>
+        <div class="form-group"><label>عنوان القسم</label><input type="text" id="contactSectionTitle" /></div>
+
+        <div class="contact-block">
+          <h3>قناة 1</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>التسمية</label><input type="text" id="contact0Label" /></div>
+            <div class="form-group"><label>القيمة</label><input type="text" id="contact0Value" /></div>
+            <div class="form-group"><label>الرابط</label><input type="text" id="contact0Href" /></div>
+          </div>
+        </div>
+
+        <div class="contact-block">
+          <h3>قناة 2</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>التسمية</label><input type="text" id="contact1Label" /></div>
+            <div class="form-group"><label>القيمة</label><input type="text" id="contact1Value" /></div>
+            <div class="form-group"><label>الرابط</label><input type="text" id="contact1Href" /></div>
+          </div>
+        </div>
+
+        <div class="contact-block">
+          <h3>قناة 3</h3>
+          <div class="grid-2">
+            <div class="form-group"><label>التسمية</label><input type="text" id="contact2Label" /></div>
+            <div class="form-group"><label>القيمة</label><input type="text" id="contact2Value" /></div>
+            <div class="form-group"><label>الرابط</label><input type="text" id="contact2Href" /></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>الشركاء | Partners</h2>
+        <div class="form-group"><label>عنوان القسم</label><input type="text" id="partnersSectionTitle" /></div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>اسم الشريك | Partner Name</label>
+            <input type="text" id="partnerName" placeholder="مثال: شركة ABC" />
+          </div>
+          <div class="form-group">
+            <label>شعار الشريك | Partner Logo</label>
+            <input type="file" id="partnerImage" accept="image/*" onchange="previewImage()" />
+            <img id="imagePreview" class="preview-image hidden" />
+          </div>
+        </div>
+        <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addPartner()">إضافة شريك | Add Partner</button>
+        </div>
+        <div id="partnersList" class="partners-list"></div>
+      </div>
+
+      <div class="section-card">
+        <h2>ملف النشر | Deployment File</h2>
+        <p class="muted-note">بعد الضغط على زر التنزيل، ارفع ملف <code>site-data.json</code> إلى المشروع ثم ادفع التغييرات إلى GitHub.</p>
+        <div id="jsonOutput" class="hidden">
+          <label>محتوى ملف <code>site-data.json</code></label>
+          <textarea id="jsonContent" style="font-family: monospace; direction: ltr; text-align: left; min-height: 240px;"></textarea>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     const ADMIN_PASSWORD = 'admin123';
-    let partners = JSON.parse(localStorage.getItem('partners') || '[]');
+    let siteData = null;
     let currentImage = null;
+
+    const fallbackSiteData = {
+      brandName: 'Accounting Systems Doctor',
+      headerContactText: 'تواصل معنا | Contact Us',
+      headerContactHref: '#contact',
+      hero: {
+        title: 'حلول محاسبية جاهزة لنمو أعمالك | Ready Accounting Solutions for Business Growth',
+        lead: 'منصة احترافية لعرض البرامج المحاسبية وبيعها مباشرة. ,تلبية طلبات العملاء , انشاء برامج خاصة حسب طلب العميل',
+        primaryButtonText: 'Browse Programs',
+        primaryButtonHref: '#programs',
+        secondaryButtonText: 'Request Consultation',
+        secondaryButtonHref: '#cloud-program'
+      },
+      heroStats: {
+        title: 'إحصاءات سريعة | Quick Metrics',
+        items: ['+150 عميل استخدم الحلول المحاسبية', 'دعم فني مباشر بعد الشراء', 'تهيئة وربط حسب نشاطك التجاري']
+      },
+      programsSectionTitle: 'تطبيقات الجوال المتاحة | Available Mobile Apps',
+      programs: [
+        {
+          iconType: 'emoji',
+          iconValue: '🧾',
+          iconAlt: 'Inventory Doctor Icon',
+          title: 'طبيب الجرد | Inventory Doctor',
+          description: 'برنامج لإدارة المخزون والجرد والباركود وحساب الأرباح بسهولة. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '500 ريال',
+          platform: 'Android Only',
+          downloadHref: '/inventory-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D8%AC%D8%B1%D8%AF',
+          licenseText: 'اطلب الترخيص عبر واتساب'
+        },
+        {
+          iconType: 'image',
+          iconValue: '/gas-sales-logo.png',
+          iconAlt: 'Gas Sales Doctor Logo',
+          title: 'طبيب المحطات | Gas Sales Doctor',
+          description: 'تطبيق لإدارة مبيعات ومشتريات محطات الوقود ومحلات بيع اسطوانات الغاز. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '1000 ريال',
+          platform: 'Android Only',
+          downloadHref: '/gas-sales-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%B7%D8%A7%D8%AA',
+          licenseText: 'اطلب الترخيص عبر واتساب'
+        },
+        {
+          iconType: 'image',
+          iconValue: '/salesman-logo.png',
+          iconAlt: 'Salesman Doctor Logo',
+          title: 'طبيب مندوب المبيعات | Salesman Doctor',
+          description: 'تطبيق لإدارة المبيعات والمشتريات والمخزون والسندات المالية ميدانياً لمندوبي المبيعات. شروط التشغيل: يعمل على أجهزة Android فقط.',
+          price: '1000 ريال',
+          platform: 'Android Only',
+          downloadHref: '/salesman-doctor.apk',
+          downloadText: 'تحميل مباشر من هنا',
+          licenseHref: 'https://wa.me/966598861163?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AA%D8%B1%D8%AE%D9%8A%D8%B5%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%B7%D8%A8%D9%8A%D8%A8%20%D9%85%D9%86%D8%AF%D9%88%D8%A8%20%D8%A7%D9%84%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA',
+          licenseText: 'اطلب الترخيص عبر واتساب'
+        }
+      ],
+      cloud: {
+        title: 'البرنامج المحاسبي السحابي | Cloud Accounting Program',
+        description: 'هذا المنتج مخصص للإدارة السحابية للمتاجر ونقاط البيع، ويختلف عن تطبيقات الجوال. يمكن تشغيله داخل المنشأة مع صلاحيات متعددة وتقارير تفصيلية ومتابعة العمليات لحظياً.',
+        badges: ['سحابي بالكامل', 'صلاحيات مستخدمين', 'تقارير تشغيلية ومالية', 'مناسب للمتاجر ونقاط البيع'],
+        requestFormAction: 'mailto:doctorsystem8@gmail.com',
+        requestButtonText: 'إرسال الطلب عبر البريد | Send Request by Email',
+        mobileButtonText: 'إرسال عبر الجوال (واتساب) | Send via Mobile',
+        mobileButtonHref: 'https://wa.me/966598861163',
+        note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
+        demoTitle: 'صفحة الديمو | Demo Page',
+        demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
+        demoHref: 'https://das-erp-demo.vercel.app',
+        demoLinkText: 'https://das-erp-demo.vercel.app'
+      },
+      contactSectionTitle: 'قنوات التواصل | Contact Channels',
+      contacts: [
+        { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
+        { label: 'Email', value: 'doctorsystem8@gmail.com', href: 'mailto:doctorsystem8@gmail.com' },
+        { label: 'Telegram Channel', value: 't.me/systemsdoctor', href: 'https://t.me/systemsdoctor' }
+      ],
+      partnersSectionTitle: 'شركاؤنا | Our Partners',
+      partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
+      footerText: '© 2026 Accounting Systems Doctor'
+    };
+
+    function getLines(value) {
+      return value.split('\n').map(item => item.trim()).filter(Boolean);
+    }
+
+    function downloadJsonFile(filename, data) {
+      const jsonData = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return jsonData;
+    }
+
+    async function loadInitialData() {
+      const localSiteData = localStorage.getItem('siteData');
+      if (localSiteData) {
+        try {
+          siteData = JSON.parse(localSiteData);
+        } catch (error) {
+          siteData = null;
+        }
+      }
+
+      if (!siteData) {
+        try {
+          const response = await fetch('site-data.json');
+          if (!response.ok) throw new Error('Failed to load site data');
+          siteData = await response.json();
+        } catch (error) {
+          siteData = JSON.parse(JSON.stringify(fallbackSiteData));
+        }
+      }
+
+      const localPartners = localStorage.getItem('partners');
+      if (localPartners) {
+        try {
+          const parsedPartners = JSON.parse(localPartners);
+          if (Array.isArray(parsedPartners) && parsedPartners.length > 0) {
+            siteData.partners = parsedPartners;
+          }
+        } catch (error) {
+        }
+      }
+    }
+
+    function fillProgramFields(program, index) {
+      document.getElementById(`program${index}Title`).value = program?.title || '';
+      document.getElementById(`program${index}Description`).value = program?.description || '';
+      document.getElementById(`program${index}Price`).value = program?.price || '';
+      document.getElementById(`program${index}Platform`).value = program?.platform || '';
+      document.getElementById(`program${index}DownloadHref`).value = program?.downloadHref || '';
+      document.getElementById(`program${index}DownloadText`).value = program?.downloadText || '';
+      document.getElementById(`program${index}LicenseHref`).value = program?.licenseHref || '';
+      document.getElementById(`program${index}LicenseText`).value = program?.licenseText || '';
+    }
+
+    function fillContactFields(contact, index) {
+      document.getElementById(`contact${index}Label`).value = contact?.label || '';
+      document.getElementById(`contact${index}Value`).value = contact?.value || '';
+      document.getElementById(`contact${index}Href`).value = contact?.href || '';
+    }
+
+    function populateForm() {
+      document.getElementById('brandName').value = siteData.brandName || '';
+      document.getElementById('headerContactText').value = siteData.headerContactText || '';
+      document.getElementById('headerContactHref').value = siteData.headerContactHref || '';
+      document.getElementById('footerText').value = siteData.footerText || '';
+
+      document.getElementById('heroTitle').value = siteData.hero?.title || '';
+      document.getElementById('heroLead').value = siteData.hero?.lead || '';
+      document.getElementById('heroPrimaryText').value = siteData.hero?.primaryButtonText || '';
+      document.getElementById('heroPrimaryHref').value = siteData.hero?.primaryButtonHref || '';
+      document.getElementById('heroSecondaryText').value = siteData.hero?.secondaryButtonText || '';
+      document.getElementById('heroSecondaryHref').value = siteData.hero?.secondaryButtonHref || '';
+
+      document.getElementById('statsTitle').value = siteData.heroStats?.title || '';
+      document.getElementById('statsItems').value = (siteData.heroStats?.items || []).join('\n');
+
+      document.getElementById('programsSectionTitle').value = siteData.programsSectionTitle || '';
+      fillProgramFields(siteData.programs?.[0], 0);
+      fillProgramFields(siteData.programs?.[1], 1);
+      fillProgramFields(siteData.programs?.[2], 2);
+
+      document.getElementById('cloudTitle').value = siteData.cloud?.title || '';
+      document.getElementById('cloudDescription').value = siteData.cloud?.description || '';
+      document.getElementById('cloudBadges').value = (siteData.cloud?.badges || []).join('\n');
+      document.getElementById('cloudRequestAction').value = siteData.cloud?.requestFormAction || '';
+      document.getElementById('cloudRequestButtonText').value = siteData.cloud?.requestButtonText || '';
+      document.getElementById('cloudMobileButtonText').value = siteData.cloud?.mobileButtonText || '';
+      document.getElementById('cloudMobileButtonHref').value = siteData.cloud?.mobileButtonHref || '';
+      document.getElementById('cloudNote').value = siteData.cloud?.note || '';
+      document.getElementById('cloudDemoTitle').value = siteData.cloud?.demoTitle || '';
+      document.getElementById('cloudDemoText').value = siteData.cloud?.demoText || '';
+      document.getElementById('cloudDemoHref').value = siteData.cloud?.demoHref || '';
+      document.getElementById('cloudDemoLinkText').value = siteData.cloud?.demoLinkText || '';
+
+      document.getElementById('contactSectionTitle').value = siteData.contactSectionTitle || '';
+      fillContactFields(siteData.contacts?.[0], 0);
+      fillContactFields(siteData.contacts?.[1], 1);
+      fillContactFields(siteData.contacts?.[2], 2);
+
+      document.getElementById('partnersSectionTitle').value = siteData.partnersSectionTitle || '';
+      renderPartners();
+    }
+
+    function collectProgram(index) {
+      const current = siteData.programs?.[index] || {};
+      return {
+        iconType: current.iconType || 'emoji',
+        iconValue: current.iconValue || '',
+        iconAlt: current.iconAlt || '',
+        title: document.getElementById(`program${index}Title`).value.trim(),
+        description: document.getElementById(`program${index}Description`).value.trim(),
+        price: document.getElementById(`program${index}Price`).value.trim(),
+        platform: document.getElementById(`program${index}Platform`).value.trim(),
+        downloadHref: document.getElementById(`program${index}DownloadHref`).value.trim(),
+        downloadText: document.getElementById(`program${index}DownloadText`).value.trim(),
+        licenseHref: document.getElementById(`program${index}LicenseHref`).value.trim(),
+        licenseText: document.getElementById(`program${index}LicenseText`).value.trim()
+      };
+    }
+
+    function collectContact(index) {
+      return {
+        label: document.getElementById(`contact${index}Label`).value.trim(),
+        value: document.getElementById(`contact${index}Value`).value.trim(),
+        href: document.getElementById(`contact${index}Href`).value.trim()
+      };
+    }
+
+    function gatherSiteData() {
+      return {
+        brandName: document.getElementById('brandName').value.trim(),
+        headerContactText: document.getElementById('headerContactText').value.trim(),
+        headerContactHref: document.getElementById('headerContactHref').value.trim(),
+        hero: {
+          title: document.getElementById('heroTitle').value.trim(),
+          lead: document.getElementById('heroLead').value.trim(),
+          primaryButtonText: document.getElementById('heroPrimaryText').value.trim(),
+          primaryButtonHref: document.getElementById('heroPrimaryHref').value.trim(),
+          secondaryButtonText: document.getElementById('heroSecondaryText').value.trim(),
+          secondaryButtonHref: document.getElementById('heroSecondaryHref').value.trim()
+        },
+        heroStats: {
+          title: document.getElementById('statsTitle').value.trim(),
+          items: getLines(document.getElementById('statsItems').value)
+        },
+        programsSectionTitle: document.getElementById('programsSectionTitle').value.trim(),
+        programs: [collectProgram(0), collectProgram(1), collectProgram(2)],
+        cloud: {
+          title: document.getElementById('cloudTitle').value.trim(),
+          description: document.getElementById('cloudDescription').value.trim(),
+          badges: getLines(document.getElementById('cloudBadges').value),
+          requestFormAction: document.getElementById('cloudRequestAction').value.trim(),
+          requestButtonText: document.getElementById('cloudRequestButtonText').value.trim(),
+          mobileButtonText: document.getElementById('cloudMobileButtonText').value.trim(),
+          mobileButtonHref: document.getElementById('cloudMobileButtonHref').value.trim(),
+          note: document.getElementById('cloudNote').value.trim(),
+          demoTitle: document.getElementById('cloudDemoTitle').value.trim(),
+          demoText: document.getElementById('cloudDemoText').value.trim(),
+          demoHref: document.getElementById('cloudDemoHref').value.trim(),
+          demoLinkText: document.getElementById('cloudDemoLinkText').value.trim()
+        },
+        contactSectionTitle: document.getElementById('contactSectionTitle').value.trim(),
+        contacts: [collectContact(0), collectContact(1), collectContact(2)],
+        partnersSectionTitle: document.getElementById('partnersSectionTitle').value.trim(),
+        partners: siteData.partners || [],
+        footerText: document.getElementById('footerText').value.trim()
+      };
+    }
 
     function login() {
       const password = document.getElementById('password').value;
-      if (password === ADMIN_PASSWORD) {
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('adminSection').classList.remove('hidden');
-        renderPartners();
-      } else {
+      if (password !== ADMIN_PASSWORD) {
         alert('كلمة المرور غير صحيحة!');
+        return;
       }
+
+      localStorage.setItem('adminLoggedIn', 'true');
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('adminSection').classList.remove('hidden');
+      loadInitialData().then(populateForm);
+    }
+
+    function logout() {
+      localStorage.removeItem('adminLoggedIn');
+      location.reload();
     }
 
     function previewImage() {
       const file = document.getElementById('partnerImage').files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          currentImage = e.target.result;
-          const preview = document.getElementById('imagePreview');
-          preview.src = currentImage;
-          preview.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
+      if (!file) {
+        return;
       }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        currentImage = event.target.result;
+        const preview = document.getElementById('imagePreview');
+        preview.src = currentImage;
+        preview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
     }
 
     function addPartner() {
@@ -250,76 +738,65 @@
         return;
       }
       if (!currentImage) {
-        alert('يرجى اختيار صورة!');
+        alert('يرجى اختيار صورة الشريك!');
         return;
       }
 
-      const partner = {
-        id: Date.now(),
-        name: name,
-        image: currentImage
-      };
+      siteData.partners = siteData.partners || [];
+      siteData.partners.push({ id: Date.now(), name, image: currentImage });
+      localStorage.setItem('partners', JSON.stringify(siteData.partners));
 
-      partners.push(partner);
-      localStorage.setItem('partners', JSON.stringify(partners));
-      
       document.getElementById('partnerName').value = '';
       document.getElementById('partnerImage').value = '';
       document.getElementById('imagePreview').classList.add('hidden');
       currentImage = null;
-      
       renderPartners();
-      alert('تم إضافة الشريك بنجاح!');
     }
 
     function deletePartner(id) {
-      if (confirm('هل أنت متأكد من حذف هذا الشريك؟')) {
-        partners = partners.filter(p => p.id !== id);
-        localStorage.setItem('partners', JSON.stringify(partners));
-        renderPartners();
-      }
+      siteData.partners = (siteData.partners || []).filter(partner => partner.id !== id);
+      localStorage.setItem('partners', JSON.stringify(siteData.partners));
+      renderPartners();
     }
 
     function renderPartners() {
       const container = document.getElementById('partnersList');
+      const partners = siteData.partners || [];
       if (partners.length === 0) {
         container.innerHTML = '<p style="color: var(--muted);">لا يوجد شركاء مضافون بعد.</p>';
         return;
       }
 
-      container.innerHTML = partners.map(p => `
+      container.innerHTML = partners.map(partner => `
         <div class="partner-item">
-          <button class="delete-btn" onclick="deletePartner(${p.id})">×</button>
-          <img src="${p.image}" alt="${p.name}" />
-          <div class="name">${p.name}</div>
+          <button class="delete-btn" onclick="deletePartner(${partner.id})">×</button>
+          <img src="${partner.image}" alt="${partner.name}" />
+          <div class="name">${partner.name}</div>
         </div>
       `).join('');
     }
 
-    function generateJSON() {
-      const jsonData = JSON.stringify(partners, null, 2);
-      document.getElementById('jsonOutput').classList.remove('hidden');
-      document.getElementById('jsonContent').value = jsonData;
-      
-      // Also create a downloadable file
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'partners.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      alert('تم تنزيل ملف partners.json! قم برفعه إلى موقعك.');
+    function saveLocalData() {
+      siteData = gatherSiteData();
+      localStorage.setItem('siteData', JSON.stringify(siteData));
+      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      alert('تم حفظ التغييرات محليًا. افتح الصفحة الرئيسية وستظهر التعديلات على هذا الجهاز.');
     }
 
-    // Check if already logged in (for simplicity in demo)
+    function downloadSiteData() {
+      siteData = gatherSiteData();
+      localStorage.setItem('siteData', JSON.stringify(siteData));
+      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      const jsonData = downloadJsonFile('site-data.json', siteData);
+      document.getElementById('jsonOutput').classList.remove('hidden');
+      document.getElementById('jsonContent').value = jsonData;
+      alert('تم تنزيل ملف site-data.json. ارفعه إلى المشروع ثم ادفع التغييرات إلى GitHub.');
+    }
+
     if (localStorage.getItem('adminLoggedIn') === 'true') {
       document.getElementById('loginSection').classList.add('hidden');
       document.getElementById('adminSection').classList.remove('hidden');
-      renderPartners();
+      loadInitialData().then(populateForm);
     }
   </script>
 </body>
