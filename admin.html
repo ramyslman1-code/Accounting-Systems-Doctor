@@ -411,34 +411,9 @@
       <div class="section-card">
         <h2>قنوات التواصل | Contact Channels</h2>
         <div class="form-group"><label>عنوان القسم</label><input type="text" id="contactSectionTitle" /></div>
-
-        <div class="contact-block">
-          <h3>قناة 1</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>التسمية</label><input type="text" id="contact0Label" /></div>
-            <div class="form-group"><label>القيمة</label><input type="text" id="contact0Value" /></div>
-            <div class="form-group"><label>الرابط</label><input type="text" id="contact0Href" /></div>
-          </div>
-        </div>
-
-        <div class="contact-block">
-          <h3>قناة 2</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>التسمية</label><input type="text" id="contact1Label" /></div>
-            <div class="form-group"><label>القيمة</label><input type="text" id="contact1Value" /></div>
-            <div class="form-group"><label>الرابط</label><input type="text" id="contact1Href" /></div>
-          </div>
-        </div>
-
-        <div class="contact-block">
-          <h3>قناة 3</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>التسمية</label><input type="text" id="contact2Label" /></div>
-            <div class="form-group"><label>القيمة</label><input type="text" id="contact2Value" /></div>
-            <div class="form-group"><label>الرابط</label><input type="text" id="contact2Href" /></div>
-          </div>
-        </div>
+        <div id="contactsEditor" class="editor-list"></div>
         <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addContact()">إضافة قناة</button>
           <button class="btn btn-success" onclick="saveSection('contacts')">حفظ هذا القسم</button>
           <button class="btn btn-danger" onclick="clearSection('contacts')">مسح هذا القسم</button>
         </div>
@@ -565,19 +540,69 @@
       ],
       contactSectionTitle: 'قنوات التواصل | Contact Channels',
       contacts: [
-        { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
-        { label: 'Email', value: 'doctorsystem8@gmail.com', href: 'mailto:doctorsystem8@gmail.com' },
-        { label: 'Telegram Channel', value: 't.me/systemsdoctor', href: 'https://t.me/systemsdoctor' }
+        { id: 1, type: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/966598861163' },
+        { id: 2, type: 'email', label: 'Email', href: 'mailto:doctorsystem8@gmail.com' },
+        { id: 3, type: 'telegram', label: 'Telegram Channel', href: 'https://t.me/systemsdoctor' },
+        { id: 4, type: 'tiktok', label: 'TikTok', href: '' },
+        { id: 5, type: 'instagram', label: 'Instagram', href: '' },
+        { id: 6, type: 'youtube', label: 'YouTube', href: '' }
       ],
       partnersSectionTitle: 'شركاؤنا | Our Partners',
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
     };
 
+    function getDefaultContactLabel(type) {
+      const labels = {
+        whatsapp: 'WhatsApp',
+        email: 'Email',
+        telegram: 'Telegram Channel',
+        tiktok: 'TikTok',
+        instagram: 'Instagram',
+        youtube: 'YouTube',
+        website: 'Website'
+      };
+      return labels[type] || 'Contact';
+    }
+
+    function inferContactType(label, href) {
+      const combined = `${label || ''} ${href || ''}`.toLowerCase();
+      if (combined.includes('wa.me') || combined.includes('whatsapp')) return 'whatsapp';
+      if (combined.includes('mailto:') || combined.includes('email') || combined.includes('@')) return 'email';
+      if (combined.includes('t.me') || combined.includes('telegram')) return 'telegram';
+      if (combined.includes('tiktok')) return 'tiktok';
+      if (combined.includes('instagram')) return 'instagram';
+      if (combined.includes('youtube') || combined.includes('youtu.be')) return 'youtube';
+      return 'website';
+    }
+
+    function normalizeContacts(contacts) {
+      const defaults = JSON.parse(JSON.stringify(fallbackSiteData.contacts || []));
+      const normalizedContacts = (Array.isArray(contacts) ? contacts : []).map((contact, index) => ({
+        id: contact.id || Date.now() + index,
+        type: (contact.type || inferContactType(contact.label, contact.href)).toLowerCase(),
+        label: contact.label || getDefaultContactLabel(contact.type || inferContactType(contact.label, contact.href)),
+        href: contact.href || ''
+      }));
+
+      defaults.forEach((defaultContact, index) => {
+        if (!normalizedContacts.some((contact) => contact.type === defaultContact.type)) {
+          normalizedContacts.push({
+            id: defaultContact.id || Date.now() + normalizedContacts.length + index,
+            type: defaultContact.type,
+            label: defaultContact.label,
+            href: defaultContact.href || ''
+          });
+        }
+      });
+
+      return normalizedContacts;
+    }
+
     function normalizeSiteData(data) {
       const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
       normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
-      normalized.contacts = Array.isArray(normalized.contacts) ? normalized.contacts : [];
+      normalized.contacts = normalizeContacts(normalized.contacts);
       normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
       normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
       normalized.cloud = normalized.cloud || {};
@@ -718,10 +743,48 @@
       `).join('');
     }
 
-    function fillContactFields(contact, index) {
-      document.getElementById(`contact${index}Label`).value = contact?.label || '';
-      document.getElementById(`contact${index}Value`).value = contact?.value || '';
-      document.getElementById(`contact${index}Href`).value = contact?.href || '';
+    function getContactTypeOptions(selectedType) {
+      const options = [
+        { value: 'whatsapp', label: 'واتساب | WhatsApp' },
+        { value: 'email', label: 'بريد إلكتروني | Email' },
+        { value: 'telegram', label: 'تيليجرام | Telegram' },
+        { value: 'tiktok', label: 'تيك توك | TikTok' },
+        { value: 'instagram', label: 'إنستغرام | Instagram' },
+        { value: 'youtube', label: 'يوتيوب | YouTube' },
+        { value: 'website', label: 'رابط عام | Website' }
+      ];
+
+      return options.map((option) => `<option value="${option.value}" ${option.value === selectedType ? 'selected' : ''}>${option.label}</option>`).join('');
+    }
+
+    function renderContactsEditor() {
+      const container = document.getElementById('contactsEditor');
+      const contacts = siteData.contacts || [];
+      container.innerHTML = contacts.map((contact, index) => `
+        <div class="editor-item">
+          <div class="editor-item-header">
+            <h3>قناة ${index + 1}</h3>
+            <button class="btn btn-danger small-btn" type="button" onclick="removeContact(${index})">حذف القناة</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>نوع القناة</label>
+              <select id="contact${index}Type" onchange="syncContactLabel(${index})">${getContactTypeOptions(contact.type || 'website')}</select>
+            </div>
+            <div class="form-group"><label>التسمية</label><input type="text" id="contact${index}Label" value="${contact.label || ''}" /></div>
+            <div class="form-group"><label>الرابط المباشر</label><input type="text" id="contact${index}Href" value="${contact.href || ''}" /></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function syncContactLabel(index) {
+      const typeField = document.getElementById(`contact${index}Type`);
+      const labelField = document.getElementById(`contact${index}Label`);
+      if (!typeField || !labelField || labelField.value.trim()) {
+        return;
+      }
+      labelField.value = getDefaultContactLabel(typeField.value);
     }
 
     function populateForm() {
@@ -759,9 +822,7 @@
       renderAnnouncementsEditor();
 
       document.getElementById('contactSectionTitle').value = siteData.contactSectionTitle || '';
-      fillContactFields(siteData.contacts?.[0], 0);
-      fillContactFields(siteData.contacts?.[1], 1);
-      fillContactFields(siteData.contacts?.[2], 2);
+      renderContactsEditor();
 
       document.getElementById('partnersSectionTitle').value = siteData.partnersSectionTitle || '';
       renderPartners();
@@ -803,12 +864,13 @@
       }));
     }
 
-    function collectContact(index) {
-      return {
-        label: document.getElementById(`contact${index}Label`).value.trim(),
-        value: document.getElementById(`contact${index}Value`).value.trim(),
+    function collectContacts() {
+      return (siteData.contacts || []).map((contact, index) => ({
+        id: contact.id || Date.now() + index,
+        type: document.getElementById(`contact${index}Type`).value.trim() || 'website',
+        label: document.getElementById(`contact${index}Label`).value.trim() || getDefaultContactLabel(document.getElementById(`contact${index}Type`).value.trim()),
         href: document.getElementById(`contact${index}Href`).value.trim()
-      };
+      }));
     }
 
     function gatherSiteData() {
@@ -846,7 +908,7 @@
         announcementsSectionTitle: document.getElementById('announcementsSectionTitle').value.trim(),
         announcements: collectAnnouncements(),
         contactSectionTitle: document.getElementById('contactSectionTitle').value.trim(),
-        contacts: [collectContact(0), collectContact(1), collectContact(2)],
+        contacts: collectContacts(),
         partnersSectionTitle: document.getElementById('partnersSectionTitle').value.trim(),
         partners: siteData.partners || [],
         footerText: document.getElementById('footerText').value.trim()
@@ -937,6 +999,19 @@
       siteData = gatherSiteData();
       siteData.announcements.splice(index, 1);
       renderAnnouncementsEditor();
+    }
+
+    function addContact() {
+      siteData = gatherSiteData();
+      siteData.contacts = siteData.contacts || [];
+      siteData.contacts.push({ id: Date.now(), type: 'whatsapp', label: 'WhatsApp', href: '' });
+      renderContactsEditor();
+    }
+
+    function removeContact(index) {
+      siteData = gatherSiteData();
+      siteData.contacts.splice(index, 1);
+      renderContactsEditor();
     }
 
     function addPartner() {
@@ -1053,11 +1128,8 @@
 
       if (sectionName === 'contacts') {
         document.getElementById('contactSectionTitle').value = '';
-        for (let i = 0; i < 3; i += 1) {
-          document.getElementById(`contact${i}Label`).value = '';
-          document.getElementById(`contact${i}Value`).value = '';
-          document.getElementById(`contact${i}Href`).value = '';
-        }
+        siteData.contacts = [];
+        renderContactsEditor();
       }
 
       if (sectionName === 'partners') {

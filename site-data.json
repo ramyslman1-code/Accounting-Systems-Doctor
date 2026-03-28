@@ -98,18 +98,27 @@
   "contacts": [
     {
       "label": "WhatsApp",
-      "value": "+966598861163",
       "href": "https://wa.me/966598861163"
     },
     {
       "label": "Email",
-      "value": "doctorsystem8@gmail.com",
       "href": "mailto:doctorsystem8@gmail.com"
     },
     {
       "label": "Telegram Channel",
-      "value": "t.me/systemsdoctor",
       "href": "https://t.me/systemsdoctor"
+    },
+    {
+      "label": "TikTok",
+      "href": ""
+    },
+    {
+      "label": "Instagram",
+      "href": ""
+    },
+    {
+      "label": "YouTube",
+      "href": ""
     }
   ],
   "partnersSectionTitle": "شركاؤنا | Our Partners",

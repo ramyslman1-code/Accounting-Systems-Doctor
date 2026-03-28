@@ -327,39 +327,75 @@
     }
 
     .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
     }
 
     .contact-item {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
       text-decoration: none;
-      color: var(--text);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, .04);
-      transition: transform .15s ease, border-color .15s ease;
-      display: block;
+      color: #ffffff;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .10);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .contact-item:hover {
-      transform: translateY(-2px);
-      border-color: var(--primary);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 28px rgba(0, 0, 0, .16);
+      filter: saturate(1.08);
     }
 
-    .contact-item .label {
-      display: block;
-      color: var(--muted);
-      font-size: .86rem;
-      margin-bottom: 5px;
+    .contact-item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.18), transparent 55%);
+      pointer-events: none;
     }
 
-    .contact-item strong {
-      font-size: .98rem;
-      color: var(--primary-2);
-      word-break: break-all;
+    .contact-item svg {
+      width: 30px;
+      height: 30px;
+      fill: currentColor;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-item.whatsapp {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+    }
+
+    .contact-item.email {
+      background: linear-gradient(135deg, #4f46e5, #2563eb);
+    }
+
+    .contact-item.telegram {
+      background: linear-gradient(135deg, #27a7e7, #1f7fd4);
+    }
+
+    .contact-item.tiktok {
+      background: linear-gradient(135deg, #111111, #ff0050);
+    }
+
+    .contact-item.instagram {
+      background: linear-gradient(135deg, #f58529, #dd2a7b 48%, #8134af 78%, #515bd4);
+    }
+
+    .contact-item.youtube {
+      background: linear-gradient(135deg, #ff3131, #c50000);
+    }
+
+    .contact-item.website {
+      background: linear-gradient(135deg, #0f766e, #2563eb);
     }
 
     .pos-reserve {
@@ -859,19 +895,69 @@
       ],
       contactSectionTitle: 'قنوات التواصل | Contact Channels',
       contacts: [
-        { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
-        { label: 'Email', value: 'doctorsystem8@gmail.com', href: 'mailto:doctorsystem8@gmail.com' },
-        { label: 'Telegram Channel', value: 't.me/systemsdoctor', href: 'https://t.me/systemsdoctor' }
+        { id: 1, type: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/966598861163' },
+        { id: 2, type: 'email', label: 'Email', href: 'mailto:doctorsystem8@gmail.com' },
+        { id: 3, type: 'telegram', label: 'Telegram Channel', href: 'https://t.me/systemsdoctor' },
+        { id: 4, type: 'tiktok', label: 'TikTok', href: '' },
+        { id: 5, type: 'instagram', label: 'Instagram', href: '' },
+        { id: 6, type: 'youtube', label: 'YouTube', href: '' }
       ],
       partnersSectionTitle: 'شركاؤنا | Our Partners',
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
     };
 
+    function getDefaultContactLabel(type) {
+      const labels = {
+        whatsapp: 'WhatsApp',
+        email: 'Email',
+        telegram: 'Telegram Channel',
+        tiktok: 'TikTok',
+        instagram: 'Instagram',
+        youtube: 'YouTube',
+        website: 'Website'
+      };
+      return labels[type] || 'Contact';
+    }
+
+    function inferContactType(label, href) {
+      const combined = `${label || ''} ${href || ''}`.toLowerCase();
+      if (combined.includes('wa.me') || combined.includes('whatsapp')) return 'whatsapp';
+      if (combined.includes('mailto:') || combined.includes('email') || combined.includes('@')) return 'email';
+      if (combined.includes('t.me') || combined.includes('telegram')) return 'telegram';
+      if (combined.includes('tiktok')) return 'tiktok';
+      if (combined.includes('instagram')) return 'instagram';
+      if (combined.includes('youtube') || combined.includes('youtu.be')) return 'youtube';
+      return 'website';
+    }
+
+    function normalizeContacts(contacts) {
+      const defaults = JSON.parse(JSON.stringify(fallbackSiteData.contacts || []));
+      const normalizedContacts = (Array.isArray(contacts) ? contacts : []).map((contact, index) => ({
+        id: contact.id || Date.now() + index,
+        type: (contact.type || inferContactType(contact.label, contact.href)).toLowerCase(),
+        label: contact.label || getDefaultContactLabel(contact.type || inferContactType(contact.label, contact.href)),
+        href: contact.href || ''
+      }));
+
+      defaults.forEach((defaultContact, index) => {
+        if (!normalizedContacts.some((contact) => contact.type === defaultContact.type)) {
+          normalizedContacts.push({
+            id: defaultContact.id || Date.now() + normalizedContacts.length + index,
+            type: defaultContact.type,
+            label: defaultContact.label,
+            href: defaultContact.href || ''
+          });
+        }
+      });
+
+      return normalizedContacts;
+    }
+
     function normalizeSiteData(data) {
       const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
       normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
-      normalized.contacts = Array.isArray(normalized.contacts) ? normalized.contacts : [];
+      normalized.contacts = normalizeContacts(normalized.contacts);
       normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
       normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
       normalized.cloud = normalized.cloud || {};
@@ -939,13 +1025,28 @@
       `;
     }
 
+    function renderContactIcon(type) {
+      const icons = {
+        whatsapp: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .17 5.33.17 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.33-1.66a11.88 11.88 0 0 0 5.73 1.47h.01c6.56 0 11.9-5.33 11.9-11.9a11.8 11.8 0 0 0-3.45-8.43ZM12.07 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.76.99 1-3.66-.24-.38a9.84 9.84 0 0 1-1.51-5.26c0-5.46 4.45-9.9 9.92-9.9a9.8 9.8 0 0 1 7.02 2.91 9.83 9.83 0 0 1 2.9 7c0 5.47-4.45 9.91-9.92 9.91Zm5.43-7.42c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.46a8.94 8.94 0 0 1-1.67-2.07c-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.03 1-1.03 2.44 0 1.43 1.05 2.81 1.2 3 .15.2 2.06 3.15 4.99 4.41.7.3 1.24.48 1.66.61.7.22 1.34.19 1.84.11.56-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35Z"/></svg>',
+        email: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-7.38 4.62a1.2 1.2 0 0 1-1.24 0L4 8.24V6l8 5 8-5v2.24Z"/></svg>',
+        telegram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.94 4.67a1.5 1.5 0 0 0-1.66-.24L2.9 11.3a1.5 1.5 0 0 0 .1 2.82l4.23 1.5 1.62 5.19a1.5 1.5 0 0 0 2.58.54l2.37-2.9 4.65 3.39a1.5 1.5 0 0 0 2.36-.9l3.1-14.7a1.5 1.5 0 0 0-.97-1.57ZM9.1 14.86l-.63 3.03-.93-2.98 8.94-5.53-7.38 5.48Z"/></svg>',
+        tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.44 1.48 1.75 2.79 3.5 3.23V9a7.2 7.2 0 0 1-3.5-1.02v6.44A5.58 5.58 0 1 1 10.92 9v2.86a2.76 2.76 0 1 0 2.76 2.76V3h2.82Z"/></svg>',
+        instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 0 0 4.2 7v10A2.8 2.8 0 0 0 7 19.8h10a2.8 2.8 0 0 0 2.8-2.8V7A2.8 2.8 0 0 0 17 4.2H7Zm10.25 1.65a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Z"/></svg>',
+        youtube: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.6 12 3.6 12 3.6s-7.55 0-9.4.48A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12c1.85.48 9.4.48 9.4.48s7.55 0 9.4-.48a3 3 0 0 0 2.1-2.12A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8ZM9.6 15.68V8.32L16 12l-6.4 3.68Z"/></svg>',
+        website: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2Zm6.93 9h-3.01a15.65 15.65 0 0 0-1.3-5.02A8.03 8.03 0 0 1 18.93 11ZM12 4.07c.82 1.19 1.86 3.47 2.08 6.93H9.92C10.14 7.54 11.18 5.26 12 4.07ZM4.48 13h3.03a15.65 15.65 0 0 0 1.29 5.02A8.04 8.04 0 0 1 4.48 13ZM7.51 11H4.48a8.04 8.04 0 0 1 4.32-5.02A15.65 15.65 0 0 0 7.51 11Zm4.49 8.93c-.82-1.19-1.86-3.47-2.08-6.93h4.16c-.22 3.46-1.26 5.74-2.08 6.93ZM14.62 18.02A15.65 15.65 0 0 0 15.91 13h3.02a8.03 8.03 0 0 1-4.31 5.02Z"/></svg>'
+      };
+
+      return icons[type] || icons.website;
+    }
+
     function renderContacts(contacts) {
-      return (contacts || []).map(contact => `
-        <a class="contact-item" href="${contact.href || '#'}" target="_blank" rel="noopener">
-          <span class="label">${contact.label || ''}</span>
-          <strong>${contact.value || ''}</strong>
-        </a>
-      `).join('');
+      return (contacts || [])
+        .filter((contact) => contact.href)
+        .map(contact => `
+          <a class="contact-item ${contact.type || 'website'}" href="${contact.href || '#'}" target="_blank" rel="noopener" aria-label="${contact.label || ''}" title="${contact.label || ''}">
+            ${renderContactIcon(contact.type || 'website')}
+          </a>
+        `).join('');
     }
 
     function renderPartners(partners) {
