@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إدارة الشركاء | Partners Management</title>
+  <style>
+    :root {
+      --bg: #f4f9ff;
+      --surface: #ffffff;
+      --text: #0c2f58;
+      --muted: #516b87;
+      --primary: #0b4f9c;
+      --primary-2: #083d79;
+      --line: #d7e6f6;
+      --success: #1f9d45;
+      --danger: #dc3545;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: var(--primary-2);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .login-section, .admin-section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-2);
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    input[type="file"] {
+      padding: 8px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-2);
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .partners-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .partner-item {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      text-align: center;
+      position: relative;
+    }
+    .partner-item img {
+      width: 100%;
+      max-width: 150px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .partner-item .name {
+      font-weight: 700;
+      color: var(--primary-2);
+      margin-bottom: 10px;
+    }
+    .partner-item .delete-btn {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .hidden { display: none; }
+    .preview-image {
+      max-width: 200px;
+      max-height: 150px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .instructions {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .instructions h3 {
+      margin-top: 0;
+      color: #856404;
+    }
+    .instructions ol {
+      margin: 10px 0;
+      padding-right: 20px;
+    }
+    .instructions li {
+      margin-bottom: 8px;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>إدارة الشركاء | Partners Management</h1>
+
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section">
+      <div class="form-group">
+        <label>كلمة المرور | Password:</label>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" />
+      </div>
+      <button class="btn btn-primary" onclick="login()">دخول | Login</button>
+      <p style="margin-top: 15px; color: var(--muted);">
+        <small>كلمة المرور الافتراضية: <code>admin123</code></small>
+      </p>
+    </div>
+
+    <!-- Admin Section -->
+    <div id="adminSection" class="admin-section hidden">
+      <h2>إضافة شريك جديد | Add New Partner</h2>
+      
+      <div class="form-group">
+        <label>اسم الشريك | Partner Name:</label>
+        <input type="text" id="partnerName" placeholder="مثال: شركة ABC" />
+      </div>
+      
+      <div class="form-group">
+        <label>شعار الشريك | Partner Logo:</label>
+        <input type="file" id="partnerImage" accept="image/*" onchange="previewImage()" />
+        <img id="imagePreview" class="preview-image hidden" />
+      </div>
+      
+      <button class="btn btn-primary" onclick="addPartner()">إضافة شريك | Add Partner</button>
+      <button class="btn btn-success" onclick="generateJSON()" style="margin-right: 10px;">حفظ التغييرات | Save Changes</button>
+      
+      <h2 style="margin-top: 30px;">الشركاء الحاليون | Current Partners</h2>
+      <div id="partnersList" class="partners-list"></div>
+      
+      <div class="instructions">
+        <h3>تعليمات الحفظ | Save Instructions:</h3>
+        <ol>
+          <li>بعد إضافة/حذف الشركاء، اضغط على "حفظ التغييرات"</li>
+          <li>انسخ النص الذي سيظهر و احفظه في ملف <code>partners.json</code></li>
+          <li>ارفع الصور إلى مجلد الموقع</li>
+          <li>ادفع التغييرات إلى GitHub</li>
+        </ol>
+      </div>
+      
+      <div id="jsonOutput" class="hidden" style="margin-top: 20px;">
+        <label>انسخ هذا النص واحفظه كملف partners.json:</label>
+        <textarea id="jsonContent" rows="10" style="width: 100%; font-family: monospace; direction: ltr; text-align: left;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = 'admin123';
+    let partners = JSON.parse(localStorage.getItem('partners') || '[]');
+    let currentImage = null;
+
+    function login() {
+      const password = document.getElementById('password').value;
+      if (password === ADMIN_PASSWORD) {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('adminSection').classList.remove('hidden');
+        renderPartners();
+      } else {
+        alert('كلمة المرور غير صحيحة!');
+      }
+    }
+
+    function previewImage() {
+      const file = document.getElementById('partnerImage').files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentImage = e.target.result;
+          const preview = document.getElementById('imagePreview');
+          preview.src = currentImage;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function addPartner() {
+      const name = document.getElementById('partnerName').value.trim();
+      if (!name) {
+        alert('يرجى إدخال اسم الشريك!');
+        return;
+      }
+      if (!currentImage) {
+        alert('يرجى اختيار صورة!');
+        return;
+      }
+
+      const partner = {
+        id: Date.now(),
+        name: name,
+        image: currentImage
+      };
+
+      partners.push(partner);
+      localStorage.setItem('partners', JSON.stringify(partners));
+      
+      document.getElementById('partnerName').value = '';
+      document.getElementById('partnerImage').value = '';
+      document.getElementById('imagePreview').classList.add('hidden');
+      currentImage = null;
+      
+      renderPartners();
+      alert('تم إضافة الشريك بنجاح!');
+    }
+
+    function deletePartner(id) {
+      if (confirm('هل أنت متأكد من حذف هذا الشريك؟')) {
+        partners = partners.filter(p => p.id !== id);
+        localStorage.setItem('partners', JSON.stringify(partners));
+        renderPartners();
+      }
+    }
+
+    function renderPartners() {
+      const container = document.getElementById('partnersList');
+      if (partners.length === 0) {
+        container.innerHTML = '<p style="color: var(--muted);">لا يوجد شركاء مضافون بعد.</p>';
+        return;
+      }
+
+      container.innerHTML = partners.map(p => `
+        <div class="partner-item">
+          <button class="delete-btn" onclick="deletePartner(${p.id})">×</button>
+          <img src="${p.image}" alt="${p.name}" />
+          <div class="name">${p.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function generateJSON() {
+      const jsonData = JSON.stringify(partners, null, 2);
+      document.getElementById('jsonOutput').classList.remove('hidden');
+      document.getElementById('jsonContent').value = jsonData;
+      
+      // Also create a downloadable file
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'partners.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('تم تنزيل ملف partners.json! قم برفعه إلى موقعك.');
+    }
+
+    // Check if already logged in (for simplicity in demo)
+    if (localStorage.getItem('adminLoggedIn') === 'true') {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('adminSection').classList.remove('hidden');
+      renderPartners();
+    }
+  </script>
+</body>
+</html>
