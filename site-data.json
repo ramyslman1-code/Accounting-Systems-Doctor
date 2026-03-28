@@ -98,26 +98,32 @@
   "contactSectionTitle": "قنوات التواصل | Contact Channels",
   "contacts": [
     {
+      "type": "whatsapp",
       "label": "WhatsApp",
       "href": "https://wa.me/966598861163"
     },
     {
+      "type": "email",
       "label": "Email",
       "href": "mailto:doctorsystem8@gmail.com"
     },
     {
+      "type": "telegram",
       "label": "Telegram Channel",
       "href": "https://t.me/systemsdoctor"
     },
     {
+      "type": "tiktok",
       "label": "TikTok",
       "href": "https://www.tiktok.com/@doctor.system5?_r=1&_t=ZS-954IAA8XmyI"
     },
     {
+      "type": "instagram",
       "label": "Instagram",
       "href": ""
     },
     {
+      "type": "youtube",
       "label": "YouTube",
       "href": ""
     }
