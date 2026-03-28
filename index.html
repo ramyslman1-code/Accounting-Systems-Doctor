@@ -528,6 +528,16 @@
       word-break: break-all;
     }
 
+    .demo-link-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .demo-link-item span {
+      display: block;
+      font-weight: 500;
+    }
+
     .partners-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -670,7 +680,7 @@
         note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
         demoTitle: 'صفحة الديمو | Demo Page',
         demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
-        demoLinks: [{ id: 1, text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
+        demoLinks: [{ id: 1, title: 'ديمو طبيب المتاجر', text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
       announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
       announcements: [
@@ -704,6 +714,7 @@
         if (normalized.cloud.demoHref || normalized.cloud.demoLinkText) {
           normalized.cloud.demoLinks = [{
             id: Date.now(),
+            title: normalized.cloud.demoLinkTitle || '',
             text: normalized.cloud.demoLinkText || normalized.cloud.demoHref || '',
             href: normalized.cloud.demoHref || ''
           }];
@@ -711,6 +722,12 @@
           normalized.cloud.demoLinks = [];
         }
       }
+      normalized.cloud.demoLinks = normalized.cloud.demoLinks.map((link) => ({
+        id: link.id || Date.now(),
+        title: link.title || '',
+        text: link.text || link.href || '',
+        href: link.href || ''
+      }));
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
       }
@@ -785,7 +802,7 @@
       }
 
       return `<div class="demo-links">${items.map(item => `
-        <a class="demo-link-item" href="${item.href || '#'}" target="_blank" rel="noopener">${item.text || item.href || ''}</a>
+        <a class="demo-link-item" href="${item.href || '#'}" target="_blank" rel="noopener"><strong>${item.title || 'رابط ديمو'}</strong><span>${item.text || item.href || ''}</span></a>
       `).join('')}</div>`;
     }
 

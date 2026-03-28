@@ -532,7 +532,7 @@
         note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
         demoTitle: 'صفحة الديمو | Demo Page',
         demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
-        demoLinks: [{ id: 1, text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
+        demoLinks: [{ id: 1, title: 'ديمو طبيب المتاجر', text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
       announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
       announcements: [
@@ -566,6 +566,7 @@
         if (normalized.cloud.demoHref || normalized.cloud.demoLinkText) {
           normalized.cloud.demoLinks = [{
             id: Date.now(),
+            title: normalized.cloud.demoLinkTitle || '',
             text: normalized.cloud.demoLinkText || normalized.cloud.demoHref || '',
             href: normalized.cloud.demoHref || ''
           }];
@@ -573,6 +574,12 @@
           normalized.cloud.demoLinks = [];
         }
       }
+      normalized.cloud.demoLinks = normalized.cloud.demoLinks.map((link) => ({
+        id: link.id || Date.now(),
+        title: link.title || '',
+        text: link.text || link.href || '',
+        href: link.href || ''
+      }));
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
       }
@@ -665,6 +672,7 @@
             <button class="btn btn-danger small-btn" type="button" onclick="removeDemoLink(${index})">حذف الرابط</button>
           </div>
           <div class="grid-2">
+            <div class="form-group"><label>عنوان الرابط</label><input type="text" id="demoLink${index}Title" value="${link.title || ''}" /></div>
             <div class="form-group"><label>نص الرابط</label><input type="text" id="demoLink${index}Text" value="${link.text || ''}" /></div>
             <div class="form-group"><label>الرابط</label><input type="text" id="demoLink${index}Href" value="${link.href || ''}" /></div>
           </div>
@@ -760,6 +768,7 @@
     function collectDemoLinks() {
       return (siteData.cloud?.demoLinks || []).map((link, index) => ({
         id: link.id || Date.now() + index,
+        title: document.getElementById(`demoLink${index}Title`).value.trim(),
         text: document.getElementById(`demoLink${index}Text`).value.trim(),
         href: document.getElementById(`demoLink${index}Href`).value.trim()
       }));
@@ -888,7 +897,7 @@
     function addDemoLink() {
       siteData = gatherSiteData();
       siteData.cloud.demoLinks = siteData.cloud.demoLinks || [];
-      siteData.cloud.demoLinks.push({ id: Date.now(), text: '', href: '' });
+      siteData.cloud.demoLinks.push({ id: Date.now(), title: '', text: '', href: '' });
       renderDemoLinksEditor();
     }
 

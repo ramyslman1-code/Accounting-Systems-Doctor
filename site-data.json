@@ -78,6 +78,7 @@
     "demoLinks": [
       {
         "id": 1,
+        "title": "ديمو طبيب المتاجر",
         "text": "https://das-erp-demo.vercel.app",
         "href": "https://das-erp-demo.vercel.app"
       }
