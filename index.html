@@ -370,6 +370,44 @@
       margin-top: 14px;
     }
 
+    .announcements-section {
+      margin-top: 14px;
+    }
+
+    .announcements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .announcement-card {
+      background: linear-gradient(180deg, #fffaf0, #ffffff);
+      border: 1px solid #f0dfb2;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.04);
+    }
+
+    .announcement-card h3 {
+      margin: 0 0 8px;
+      color: var(--primary-2);
+      font-size: 1.05rem;
+    }
+
+    .announcement-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .announcement-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
     .cloud-section {
       margin-top: 16px;
     }
@@ -470,6 +508,24 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.8;
+    }
+
+    .demo-links {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .demo-link-item {
+      display: block;
+      background: #ffffff;
+      border: 1px solid #d6e5f7;
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--primary-2);
+      font-weight: 700;
+      text-decoration: none;
+      word-break: break-all;
     }
 
     .partners-grid {
@@ -612,9 +668,18 @@
         note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
         demoTitle: 'صفحة الديمو | Demo Page',
         demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
-        demoHref: 'https://das-erp-demo.vercel.app',
-        demoLinkText: 'https://das-erp-demo.vercel.app'
+        demoLinks: [{ id: 1, text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
+      announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
+      announcements: [
+        {
+          id: 1,
+          title: 'إعلان تجريبي',
+          text: 'يمكنك إضافة الإعلانات المهمة هنا من لوحة الإدارة.',
+          linkText: 'تعرّف أكثر',
+          linkHref: '#contact'
+        }
+      ],
       contactSectionTitle: 'قنوات التواصل | Contact Channels',
       contacts: [
         { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
@@ -625,6 +690,30 @@
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
     };
+
+    function normalizeSiteData(data) {
+      const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
+      normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
+      normalized.contacts = Array.isArray(normalized.contacts) ? normalized.contacts : [];
+      normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
+      normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
+      normalized.cloud = normalized.cloud || {};
+      if (!Array.isArray(normalized.cloud.demoLinks)) {
+        if (normalized.cloud.demoHref || normalized.cloud.demoLinkText) {
+          normalized.cloud.demoLinks = [{
+            id: Date.now(),
+            text: normalized.cloud.demoLinkText || normalized.cloud.demoHref || '',
+            href: normalized.cloud.demoHref || ''
+          }];
+        } else {
+          normalized.cloud.demoLinks = [];
+        }
+      }
+      if (!normalized.announcementsSectionTitle) {
+        normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
+      }
+      return normalized;
+    }
 
     function renderPrograms(programs) {
       return (programs || []).map(program => `
@@ -666,12 +755,36 @@
       `).join('');
     }
 
+    function renderAnnouncements(announcements) {
+      if (!Array.isArray(announcements) || announcements.length === 0) {
+        return '';
+      }
+
+      return announcements.map(announcement => `
+        <article class="announcement-card">
+          <h3>${announcement.title || ''}</h3>
+          <p>${announcement.text || ''}</p>
+          ${announcement.linkHref ? `<a href="${announcement.linkHref}" target="_blank" rel="noopener">${announcement.linkText || announcement.linkHref}</a>` : ''}
+        </article>
+      `).join('');
+    }
+
     function renderStats(items) {
       return (items || []).map(item => `<p>${item}</p>`).join('');
     }
 
     function renderBadges(items) {
       return (items || []).map(item => `<span>${item}</span>`).join('');
+    }
+
+    function renderDemoLinks(items) {
+      if (!Array.isArray(items) || items.length === 0) {
+        return '';
+      }
+
+      return `<div class="demo-links">${items.map(item => `
+        <a class="demo-link-item" href="${item.href || '#'}" target="_blank" rel="noopener">${item.text || item.href || ''}</a>
+      `).join('')}</div>`;
     }
 
     function renderSite(data) {
@@ -701,6 +814,13 @@
             ${renderStats(data.heroStats?.items)}
           </aside>
         </section>
+
+        ${data.announcements?.length ? `
+          <section class="announcements-section">
+            <h2 class="section-title">${data.announcementsSectionTitle || ''}</h2>
+            <div class="announcements-grid">${renderAnnouncements(data.announcements)}</div>
+          </section>
+        ` : ''}
 
         <section id="programs">
           <h2 class="section-title">${data.programsSectionTitle || ''}</h2>
@@ -771,8 +891,8 @@
               <h3>${data.cloud?.demoTitle || ''}</h3>
               <p>
                 ${data.cloud?.demoText || ''}
-                <a href="${data.cloud?.demoHref || '#'}" target="_blank" rel="noopener">${data.cloud?.demoLinkText || ''}</a>
               </p>
+              ${renderDemoLinks(data.cloud?.demoLinks)}
             </div>
           </article>
         </section>
@@ -804,7 +924,7 @@
       const localSiteData = localStorage.getItem('siteData');
       if (localSiteData) {
         try {
-          data = JSON.parse(localSiteData);
+          data = normalizeSiteData(JSON.parse(localSiteData));
         } catch (error) {
           console.error('Error reading local site data:', error);
         }
@@ -814,10 +934,10 @@
         try {
           const response = await fetch('site-data.json');
           if (!response.ok) throw new Error('Failed to load site data');
-          data = await response.json();
+          data = normalizeSiteData(await response.json());
         } catch (error) {
           console.error('Error loading site data:', error);
-          data = fallbackSiteData;
+          data = normalizeSiteData(fallbackSiteData);
         }
       }
 

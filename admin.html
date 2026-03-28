@@ -208,6 +208,31 @@
       margin-top: 0;
       color: var(--primary-2);
     }
+    .editor-list {
+      display: grid;
+      gap: 14px;
+    }
+    .editor-item {
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      background: #fff;
+    }
+    .editor-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .editor-item-header h3 {
+      margin: 0;
+      color: var(--primary-2);
+    }
+    .small-btn {
+      padding: 8px 14px;
+      font-size: .92rem;
+    }
     @media (max-width: 700px) {
       .grid-2 {
         grid-template-columns: 1fr;
@@ -320,49 +345,9 @@
           <label>عنوان القسم | Section Title</label>
           <input type="text" id="programsSectionTitle" />
         </div>
-
-        <div class="program-block">
-          <h3>التطبيق الأول | Program 1</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>العنوان</label><input type="text" id="program0Title" /></div>
-            <div class="form-group"><label>السعر</label><input type="text" id="program0Price" /></div>
-            <div class="form-group"><label>المنصة</label><input type="text" id="program0Platform" /></div>
-            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program0DownloadHref" /></div>
-            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program0DownloadText" /></div>
-            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program0LicenseHref" /></div>
-            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program0LicenseText" /></div>
-          </div>
-          <div class="form-group"><label>الوصف</label><textarea id="program0Description"></textarea></div>
-        </div>
-
-        <div class="program-block">
-          <h3>التطبيق الثاني | Program 2</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>العنوان</label><input type="text" id="program1Title" /></div>
-            <div class="form-group"><label>السعر</label><input type="text" id="program1Price" /></div>
-            <div class="form-group"><label>المنصة</label><input type="text" id="program1Platform" /></div>
-            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program1DownloadHref" /></div>
-            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program1DownloadText" /></div>
-            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program1LicenseHref" /></div>
-            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program1LicenseText" /></div>
-          </div>
-          <div class="form-group"><label>الوصف</label><textarea id="program1Description"></textarea></div>
-        </div>
-
-        <div class="program-block">
-          <h3>التطبيق الثالث | Program 3</h3>
-          <div class="grid-2">
-            <div class="form-group"><label>العنوان</label><input type="text" id="program2Title" /></div>
-            <div class="form-group"><label>السعر</label><input type="text" id="program2Price" /></div>
-            <div class="form-group"><label>المنصة</label><input type="text" id="program2Platform" /></div>
-            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program2DownloadHref" /></div>
-            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program2DownloadText" /></div>
-            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program2LicenseHref" /></div>
-            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program2LicenseText" /></div>
-          </div>
-          <div class="form-group"><label>الوصف</label><textarea id="program2Description"></textarea></div>
-        </div>
+        <div id="programsEditor" class="editor-list"></div>
         <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addProgram()">إضافة تطبيق</button>
           <button class="btn btn-success" onclick="saveSection('programs')">حفظ هذا القسم</button>
           <button class="btn btn-danger" onclick="clearSection('programs')">مسح هذا القسم</button>
         </div>
@@ -379,14 +364,28 @@
           <div class="form-group"><label>نص زر الجوال</label><input type="text" id="cloudMobileButtonText" /></div>
           <div class="form-group"><label>رابط زر الجوال</label><input type="text" id="cloudMobileButtonHref" /></div>
           <div class="form-group"><label>عنوان الديمو</label><input type="text" id="cloudDemoTitle" /></div>
-          <div class="form-group"><label>رابط الديمو</label><input type="text" id="cloudDemoHref" /></div>
-          <div class="form-group"><label>نص رابط الديمو</label><input type="text" id="cloudDemoLinkText" /></div>
         </div>
         <div class="form-group"><label>ملاحظة القسم</label><textarea id="cloudNote"></textarea></div>
         <div class="form-group"><label>النص قبل رابط الديمو</label><textarea id="cloudDemoText"></textarea></div>
+        <div id="demoLinksEditor" class="editor-list"></div>
         <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addDemoLink()">إضافة رابط ديمو</button>
           <button class="btn btn-success" onclick="saveSection('cloud')">حفظ هذا القسم</button>
           <button class="btn btn-danger" onclick="clearSection('cloud')">مسح هذا القسم</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>إعلانات الموقع | Site Announcements</h2>
+        <div class="form-group">
+          <label>عنوان قسم الإعلانات | Announcements Section Title</label>
+          <input type="text" id="announcementsSectionTitle" />
+        </div>
+        <div id="announcementsEditor" class="editor-list"></div>
+        <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addAnnouncement()">إضافة إعلان</button>
+          <button class="btn btn-success" onclick="saveSection('announcements')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('announcements')">مسح هذا القسم</button>
         </div>
       </div>
 
@@ -533,9 +532,18 @@
         note: 'ملاحظة: نموذج الطلب مخصص للبرنامج السحابي فقط، وليس لتطبيقات الجوال.',
         demoTitle: 'صفحة الديمو | Demo Page',
         demoText: 'رابط ديمو برنامج طبيب المتاجر متاح الآن:',
-        demoHref: 'https://das-erp-demo.vercel.app',
-        demoLinkText: 'https://das-erp-demo.vercel.app'
+        demoLinks: [{ id: 1, text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
+      announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
+      announcements: [
+        {
+          id: 1,
+          title: 'إعلان تجريبي',
+          text: 'يمكنك إضافة الإعلانات المهمة هنا من لوحة الإدارة.',
+          linkText: 'تعرّف أكثر',
+          linkHref: '#contact'
+        }
+      ],
       contactSectionTitle: 'قنوات التواصل | Contact Channels',
       contacts: [
         { label: 'WhatsApp', value: '+966598861163', href: 'https://wa.me/966598861163' },
@@ -546,6 +554,30 @@
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
     };
+
+    function normalizeSiteData(data) {
+      const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
+      normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
+      normalized.contacts = Array.isArray(normalized.contacts) ? normalized.contacts : [];
+      normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
+      normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
+      normalized.cloud = normalized.cloud || {};
+      if (!Array.isArray(normalized.cloud.demoLinks)) {
+        if (normalized.cloud.demoHref || normalized.cloud.demoLinkText) {
+          normalized.cloud.demoLinks = [{
+            id: Date.now(),
+            text: normalized.cloud.demoLinkText || normalized.cloud.demoHref || '',
+            href: normalized.cloud.demoHref || ''
+          }];
+        } else {
+          normalized.cloud.demoLinks = [];
+        }
+      }
+      if (!normalized.announcementsSectionTitle) {
+        normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
+      }
+      return normalized;
+    }
 
     function getLines(value) {
       return value.split('\n').map(item => item.trim()).filter(Boolean);
@@ -569,7 +601,7 @@
       const localSiteData = localStorage.getItem('siteData');
       if (localSiteData) {
         try {
-          siteData = JSON.parse(localSiteData);
+          siteData = normalizeSiteData(JSON.parse(localSiteData));
         } catch (error) {
           siteData = null;
         }
@@ -579,9 +611,9 @@
         try {
           const response = await fetch('site-data.json');
           if (!response.ok) throw new Error('Failed to load site data');
-          siteData = await response.json();
+          siteData = normalizeSiteData(await response.json());
         } catch (error) {
-          siteData = JSON.parse(JSON.stringify(fallbackSiteData));
+          siteData = normalizeSiteData(JSON.parse(JSON.stringify(fallbackSiteData)));
         }
       }
 
@@ -597,15 +629,66 @@
       }
     }
 
-    function fillProgramFields(program, index) {
-      document.getElementById(`program${index}Title`).value = program?.title || '';
-      document.getElementById(`program${index}Description`).value = program?.description || '';
-      document.getElementById(`program${index}Price`).value = program?.price || '';
-      document.getElementById(`program${index}Platform`).value = program?.platform || '';
-      document.getElementById(`program${index}DownloadHref`).value = program?.downloadHref || '';
-      document.getElementById(`program${index}DownloadText`).value = program?.downloadText || '';
-      document.getElementById(`program${index}LicenseHref`).value = program?.licenseHref || '';
-      document.getElementById(`program${index}LicenseText`).value = program?.licenseText || '';
+    function renderProgramsEditor() {
+      const container = document.getElementById('programsEditor');
+      const programs = siteData.programs || [];
+      container.innerHTML = programs.map((program, index) => `
+        <div class="editor-item">
+          <div class="editor-item-header">
+            <h3>التطبيق ${index + 1}</h3>
+            <button class="btn btn-danger small-btn" type="button" onclick="removeProgram(${index})">حذف التطبيق</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label>العنوان</label><input type="text" id="program${index}Title" value="${program.title || ''}" /></div>
+            <div class="form-group"><label>السعر</label><input type="text" id="program${index}Price" value="${program.price || ''}" /></div>
+            <div class="form-group"><label>المنصة</label><input type="text" id="program${index}Platform" value="${program.platform || ''}" /></div>
+            <div class="form-group"><label>نوع الأيقونة</label><input type="text" id="program${index}IconType" value="${program.iconType || ''}" /></div>
+            <div class="form-group"><label>قيمة الأيقونة أو الصورة</label><input type="text" id="program${index}IconValue" value="${program.iconValue || ''}" /></div>
+            <div class="form-group"><label>وصف الأيقونة</label><input type="text" id="program${index}IconAlt" value="${program.iconAlt || ''}" /></div>
+            <div class="form-group"><label>رابط التحميل</label><input type="text" id="program${index}DownloadHref" value="${program.downloadHref || ''}" /></div>
+            <div class="form-group"><label>نص زر التحميل</label><input type="text" id="program${index}DownloadText" value="${program.downloadText || ''}" /></div>
+            <div class="form-group"><label>رابط الترخيص</label><input type="text" id="program${index}LicenseHref" value="${program.licenseHref || ''}" /></div>
+            <div class="form-group"><label>نص زر الترخيص</label><input type="text" id="program${index}LicenseText" value="${program.licenseText || ''}" /></div>
+          </div>
+          <div class="form-group"><label>الوصف</label><textarea id="program${index}Description">${program.description || ''}</textarea></div>
+        </div>
+      `).join('');
+    }
+
+    function renderDemoLinksEditor() {
+      const container = document.getElementById('demoLinksEditor');
+      const demoLinks = siteData.cloud?.demoLinks || [];
+      container.innerHTML = demoLinks.map((link, index) => `
+        <div class="editor-item">
+          <div class="editor-item-header">
+            <h3>رابط ديمو ${index + 1}</h3>
+            <button class="btn btn-danger small-btn" type="button" onclick="removeDemoLink(${index})">حذف الرابط</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label>نص الرابط</label><input type="text" id="demoLink${index}Text" value="${link.text || ''}" /></div>
+            <div class="form-group"><label>الرابط</label><input type="text" id="demoLink${index}Href" value="${link.href || ''}" /></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAnnouncementsEditor() {
+      const container = document.getElementById('announcementsEditor');
+      const announcements = siteData.announcements || [];
+      container.innerHTML = announcements.map((announcement, index) => `
+        <div class="editor-item">
+          <div class="editor-item-header">
+            <h3>إعلان ${index + 1}</h3>
+            <button class="btn btn-danger small-btn" type="button" onclick="removeAnnouncement(${index})">حذف الإعلان</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label>عنوان الإعلان</label><input type="text" id="announcement${index}Title" value="${announcement.title || ''}" /></div>
+            <div class="form-group"><label>نص الرابط</label><input type="text" id="announcement${index}LinkText" value="${announcement.linkText || ''}" /></div>
+            <div class="form-group"><label>رابط الإعلان</label><input type="text" id="announcement${index}LinkHref" value="${announcement.linkHref || ''}" /></div>
+          </div>
+          <div class="form-group"><label>نص الإعلان</label><textarea id="announcement${index}Text">${announcement.text || ''}</textarea></div>
+        </div>
+      `).join('');
     }
 
     function fillContactFields(contact, index) {
@@ -631,9 +714,7 @@
       document.getElementById('statsItems').value = (siteData.heroStats?.items || []).join('\n');
 
       document.getElementById('programsSectionTitle').value = siteData.programsSectionTitle || '';
-      fillProgramFields(siteData.programs?.[0], 0);
-      fillProgramFields(siteData.programs?.[1], 1);
-      fillProgramFields(siteData.programs?.[2], 2);
+      renderProgramsEditor();
 
       document.getElementById('cloudTitle').value = siteData.cloud?.title || '';
       document.getElementById('cloudDescription').value = siteData.cloud?.description || '';
@@ -645,8 +726,10 @@
       document.getElementById('cloudNote').value = siteData.cloud?.note || '';
       document.getElementById('cloudDemoTitle').value = siteData.cloud?.demoTitle || '';
       document.getElementById('cloudDemoText').value = siteData.cloud?.demoText || '';
-      document.getElementById('cloudDemoHref').value = siteData.cloud?.demoHref || '';
-      document.getElementById('cloudDemoLinkText').value = siteData.cloud?.demoLinkText || '';
+      renderDemoLinksEditor();
+
+      document.getElementById('announcementsSectionTitle').value = siteData.announcementsSectionTitle || '';
+      renderAnnouncementsEditor();
 
       document.getElementById('contactSectionTitle').value = siteData.contactSectionTitle || '';
       fillContactFields(siteData.contacts?.[0], 0);
@@ -657,12 +740,12 @@
       renderPartners();
     }
 
-    function collectProgram(index) {
-      const current = siteData.programs?.[index] || {};
-      return {
-        iconType: current.iconType || 'emoji',
-        iconValue: current.iconValue || '',
-        iconAlt: current.iconAlt || '',
+    function collectPrograms() {
+      return (siteData.programs || []).map((program, index) => ({
+        id: program.id || Date.now() + index,
+        iconType: document.getElementById(`program${index}IconType`).value.trim() || 'emoji',
+        iconValue: document.getElementById(`program${index}IconValue`).value.trim(),
+        iconAlt: document.getElementById(`program${index}IconAlt`).value.trim(),
         title: document.getElementById(`program${index}Title`).value.trim(),
         description: document.getElementById(`program${index}Description`).value.trim(),
         price: document.getElementById(`program${index}Price`).value.trim(),
@@ -671,7 +754,25 @@
         downloadText: document.getElementById(`program${index}DownloadText`).value.trim(),
         licenseHref: document.getElementById(`program${index}LicenseHref`).value.trim(),
         licenseText: document.getElementById(`program${index}LicenseText`).value.trim()
-      };
+      }));
+    }
+
+    function collectDemoLinks() {
+      return (siteData.cloud?.demoLinks || []).map((link, index) => ({
+        id: link.id || Date.now() + index,
+        text: document.getElementById(`demoLink${index}Text`).value.trim(),
+        href: document.getElementById(`demoLink${index}Href`).value.trim()
+      }));
+    }
+
+    function collectAnnouncements() {
+      return (siteData.announcements || []).map((announcement, index) => ({
+        id: announcement.id || Date.now() + index,
+        title: document.getElementById(`announcement${index}Title`).value.trim(),
+        text: document.getElementById(`announcement${index}Text`).value.trim(),
+        linkText: document.getElementById(`announcement${index}LinkText`).value.trim(),
+        linkHref: document.getElementById(`announcement${index}LinkHref`).value.trim()
+      }));
     }
 
     function collectContact(index) {
@@ -700,7 +801,7 @@
           items: getLines(document.getElementById('statsItems').value)
         },
         programsSectionTitle: document.getElementById('programsSectionTitle').value.trim(),
-        programs: [collectProgram(0), collectProgram(1), collectProgram(2)],
+        programs: collectPrograms(),
         cloud: {
           title: document.getElementById('cloudTitle').value.trim(),
           description: document.getElementById('cloudDescription').value.trim(),
@@ -712,9 +813,10 @@
           note: document.getElementById('cloudNote').value.trim(),
           demoTitle: document.getElementById('cloudDemoTitle').value.trim(),
           demoText: document.getElementById('cloudDemoText').value.trim(),
-          demoHref: document.getElementById('cloudDemoHref').value.trim(),
-          demoLinkText: document.getElementById('cloudDemoLinkText').value.trim()
+          demoLinks: collectDemoLinks()
         },
+        announcementsSectionTitle: document.getElementById('announcementsSectionTitle').value.trim(),
+        announcements: collectAnnouncements(),
         contactSectionTitle: document.getElementById('contactSectionTitle').value.trim(),
         contacts: [collectContact(0), collectContact(1), collectContact(2)],
         partnersSectionTitle: document.getElementById('partnersSectionTitle').value.trim(),
@@ -755,6 +857,58 @@
         preview.classList.remove('hidden');
       };
       reader.readAsDataURL(file);
+    }
+
+    function addProgram() {
+      siteData = gatherSiteData();
+      siteData.programs = siteData.programs || [];
+      siteData.programs.push({
+        id: Date.now(),
+        iconType: 'emoji',
+        iconValue: '📱',
+        iconAlt: '',
+        title: '',
+        description: '',
+        price: '',
+        platform: '',
+        downloadHref: '',
+        downloadText: '',
+        licenseHref: '',
+        licenseText: ''
+      });
+      renderProgramsEditor();
+    }
+
+    function removeProgram(index) {
+      siteData = gatherSiteData();
+      siteData.programs.splice(index, 1);
+      renderProgramsEditor();
+    }
+
+    function addDemoLink() {
+      siteData = gatherSiteData();
+      siteData.cloud.demoLinks = siteData.cloud.demoLinks || [];
+      siteData.cloud.demoLinks.push({ id: Date.now(), text: '', href: '' });
+      renderDemoLinksEditor();
+    }
+
+    function removeDemoLink(index) {
+      siteData = gatherSiteData();
+      siteData.cloud.demoLinks.splice(index, 1);
+      renderDemoLinksEditor();
+    }
+
+    function addAnnouncement() {
+      siteData = gatherSiteData();
+      siteData.announcements = siteData.announcements || [];
+      siteData.announcements.push({ id: Date.now(), title: '', text: '', linkText: '', linkHref: '' });
+      renderAnnouncementsEditor();
+    }
+
+    function removeAnnouncement(index) {
+      siteData = gatherSiteData();
+      siteData.announcements.splice(index, 1);
+      renderAnnouncementsEditor();
     }
 
     function addPartner() {
@@ -844,16 +998,8 @@
 
       if (sectionName === 'programs') {
         document.getElementById('programsSectionTitle').value = '';
-        for (let i = 0; i < 3; i += 1) {
-          document.getElementById(`program${i}Title`).value = '';
-          document.getElementById(`program${i}Description`).value = '';
-          document.getElementById(`program${i}Price`).value = '';
-          document.getElementById(`program${i}Platform`).value = '';
-          document.getElementById(`program${i}DownloadHref`).value = '';
-          document.getElementById(`program${i}DownloadText`).value = '';
-          document.getElementById(`program${i}LicenseHref`).value = '';
-          document.getElementById(`program${i}LicenseText`).value = '';
-        }
+        siteData.programs = [];
+        renderProgramsEditor();
       }
 
       if (sectionName === 'cloud') {
@@ -867,8 +1013,14 @@
         document.getElementById('cloudNote').value = '';
         document.getElementById('cloudDemoTitle').value = '';
         document.getElementById('cloudDemoText').value = '';
-        document.getElementById('cloudDemoHref').value = '';
-        document.getElementById('cloudDemoLinkText').value = '';
+        siteData.cloud.demoLinks = [];
+        renderDemoLinksEditor();
+      }
+
+      if (sectionName === 'announcements') {
+        document.getElementById('announcementsSectionTitle').value = '';
+        siteData.announcements = [];
+        renderAnnouncementsEditor();
       }
 
       if (sectionName === 'contacts') {
