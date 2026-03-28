@@ -87,6 +87,10 @@
       background: var(--success);
       color: white;
     }
+    .btn-accent {
+      background: linear-gradient(135deg, #ffb703, #fb8500);
+      color: white;
+    }
     .partners-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -233,6 +237,20 @@
       padding: 8px 14px;
       font-size: .92rem;
     }
+    .admin-shortcut {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .announcements-admin-panel {
+      border: 2px solid #ffd166;
+      background: linear-gradient(180deg, #fff8e6, #ffffff);
+      box-shadow: 0 12px 28px rgba(251, 133, 0, .10);
+    }
+    .announcements-admin-panel h2 {
+      color: #a85d00;
+    }
     @media (max-width: 700px) {
       .grid-2 {
         grid-template-columns: 1fr;
@@ -259,6 +277,7 @@
       <div class="actions-bar">
         <button class="btn btn-success" onclick="saveLocalData()">حفظ محلي فوري | Save Local Preview</button>
         <button class="btn btn-primary" onclick="downloadSiteData()">تنزيل site-data.json</button>
+        <a class="btn btn-accent admin-shortcut" href="#announcementsAdminPanel">بنل الإعلانات</a>
         <button class="btn btn-danger" onclick="logout()">خروج | Logout</button>
       </div>
       <p class="muted-note">الحفظ المحلي يطبّق التغييرات فورًا على هذا الجهاز. ولتطبيقها على كل الزوار، نزّل ملف <code>site-data.json</code> ثم ارفعه إلى المشروع وادفع التغييرات.</p>
@@ -375,7 +394,7 @@
         </div>
       </div>
 
-      <div class="section-card">
+      <div class="section-card announcements-admin-panel" id="announcementsAdminPanel">
         <h2>إعلانات الموقع | Site Announcements</h2>
         <div class="form-group">
           <label>عنوان قسم الإعلانات | Announcements Section Title</label>
@@ -538,10 +557,10 @@
       announcements: [
         {
           id: 1,
-          title: 'إعلان تجريبي',
-          text: 'يمكنك إضافة الإعلانات المهمة هنا من لوحة الإدارة.',
-          linkText: 'تعرّف أكثر',
-          linkHref: '#contact'
+          title: 'خصم 25% لأول 20 عميل',
+          text: 'عرض خاص ومحدود على الحلول والأنظمة المحاسبية. احجز الآن واستفد من الخصم قبل اكتمال العدد.',
+          linkText: 'اطلب العرض الآن',
+          linkHref: 'https://wa.me/966598861163'
         }
       ],
       contactSectionTitle: 'قنوات التواصل | Contact Channels',
