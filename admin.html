@@ -420,6 +420,17 @@
       </div>
 
       <div class="section-card">
+        <h2>المبيعات | Sales</h2>
+        <div class="form-group"><label>عنوان القسم</label><input type="text" id="salesSectionTitle" /></div>
+        <div id="salesEditor" class="editor-list"></div>
+        <div class="actions-bar">
+          <button class="btn btn-primary" onclick="addSalesMember()">إضافة جهة مبيعات</button>
+          <button class="btn btn-success" onclick="saveSection('sales')">حفظ هذا القسم</button>
+          <button class="btn btn-danger" onclick="clearSection('sales')">مسح هذا القسم</button>
+        </div>
+      </div>
+
+      <div class="section-card">
         <h2>الشركاء | Partners</h2>
         <div class="form-group"><label>عنوان القسم</label><input type="text" id="partnersSectionTitle" /></div>
         <div class="grid-2">
@@ -547,6 +558,11 @@
         { id: 5, type: 'instagram', label: 'Instagram', href: '' },
         { id: 6, type: 'youtube', label: 'YouTube', href: '' }
       ],
+      salesSectionTitle: 'المبيعات | Sales',
+      salesTeam: [
+        { id: 1, title: 'مسؤول المبيعات', phone: '+966598861163' },
+        { id: 2, title: 'إدارة المبيعات', phone: '+966598861163' }
+      ],
       partnersSectionTitle: 'شركاؤنا | Our Partners',
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
@@ -603,6 +619,12 @@
       const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
       normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
       normalized.contacts = normalizeContacts(normalized.contacts);
+      normalized.salesTeam = Array.isArray(normalized.salesTeam) ? normalized.salesTeam : JSON.parse(JSON.stringify(fallbackSiteData.salesTeam || []));
+      normalized.salesTeam = normalized.salesTeam.map((member, index) => ({
+        id: member.id || Date.now() + index,
+        title: member.title || '',
+        phone: member.phone || ''
+      }));
       normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
       normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
       normalized.cloud = normalized.cloud || {};
@@ -626,6 +648,9 @@
       }));
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
+      }
+      if (!normalized.salesSectionTitle) {
+        normalized.salesSectionTitle = 'المبيعات | Sales';
       }
       return normalized;
     }
@@ -743,6 +768,23 @@
       `).join('');
     }
 
+    function renderSalesEditor() {
+      const container = document.getElementById('salesEditor');
+      const salesTeam = siteData.salesTeam || [];
+      container.innerHTML = salesTeam.map((member, index) => `
+        <div class="editor-item">
+          <div class="editor-item-header">
+            <h3>جهة مبيعات ${index + 1}</h3>
+            <button class="btn btn-danger small-btn" type="button" onclick="removeSalesMember(${index})">حذف الجهة</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label>العنوان</label><input type="text" id="sales${index}Title" value="${member.title || ''}" /></div>
+            <div class="form-group"><label>رقم التواصل</label><input type="text" id="sales${index}Phone" value="${member.phone || ''}" /></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     function getContactTypeOptions(selectedType) {
       const options = [
         { value: 'whatsapp', label: 'واتساب | WhatsApp' },
@@ -824,6 +866,9 @@
       document.getElementById('contactSectionTitle').value = siteData.contactSectionTitle || '';
       renderContactsEditor();
 
+      document.getElementById('salesSectionTitle').value = siteData.salesSectionTitle || '';
+      renderSalesEditor();
+
       document.getElementById('partnersSectionTitle').value = siteData.partnersSectionTitle || '';
       renderPartners();
     }
@@ -873,6 +918,14 @@
       }));
     }
 
+    function collectSalesTeam() {
+      return (siteData.salesTeam || []).map((member, index) => ({
+        id: member.id || Date.now() + index,
+        title: document.getElementById(`sales${index}Title`).value.trim(),
+        phone: document.getElementById(`sales${index}Phone`).value.trim()
+      }));
+    }
+
     function gatherSiteData() {
       return {
         brandName: document.getElementById('brandName').value.trim(),
@@ -909,6 +962,8 @@
         announcements: collectAnnouncements(),
         contactSectionTitle: document.getElementById('contactSectionTitle').value.trim(),
         contacts: collectContacts(),
+        salesSectionTitle: document.getElementById('salesSectionTitle').value.trim(),
+        salesTeam: collectSalesTeam(),
         partnersSectionTitle: document.getElementById('partnersSectionTitle').value.trim(),
         partners: siteData.partners || [],
         footerText: document.getElementById('footerText').value.trim()
@@ -1012,6 +1067,19 @@
       siteData = gatherSiteData();
       siteData.contacts.splice(index, 1);
       renderContactsEditor();
+    }
+
+    function addSalesMember() {
+      siteData = gatherSiteData();
+      siteData.salesTeam = siteData.salesTeam || [];
+      siteData.salesTeam.push({ id: Date.now(), title: '', phone: '' });
+      renderSalesEditor();
+    }
+
+    function removeSalesMember(index) {
+      siteData = gatherSiteData();
+      siteData.salesTeam.splice(index, 1);
+      renderSalesEditor();
     }
 
     function addPartner() {
@@ -1130,6 +1198,12 @@
         document.getElementById('contactSectionTitle').value = '';
         siteData.contacts = [];
         renderContactsEditor();
+      }
+
+      if (sectionName === 'sales') {
+        document.getElementById('salesSectionTitle').value = '';
+        siteData.salesTeam = [];
+        renderSalesEditor();
       }
 
       if (sectionName === 'partners') {

@@ -121,6 +121,19 @@
       "href": ""
     }
   ],
+  "salesSectionTitle": "المبيعات | Sales",
+  "salesTeam": [
+    {
+      "id": 1,
+      "title": "مسؤول المبيعات",
+      "phone": "+966598861163"
+    },
+    {
+      "id": 2,
+      "title": "إدارة المبيعات",
+      "phone": "+966598861163"
+    }
+  ],
   "partnersSectionTitle": "شركاؤنا | Our Partners",
   "partners": [
     {

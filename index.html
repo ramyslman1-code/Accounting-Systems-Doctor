@@ -398,6 +398,44 @@
       background: linear-gradient(135deg, #0f766e, #2563eb);
     }
 
+    .sales-section {
+      margin-top: 14px;
+    }
+
+    .sales-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .sales-card {
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .05);
+    }
+
+    .sales-card h3 {
+      margin: 0 0 10px;
+      color: var(--primary-2);
+      font-size: 1.06rem;
+    }
+
+    .sales-phone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary-2);
+      font-weight: 800;
+      text-decoration: none;
+      direction: ltr;
+    }
+
     .pos-reserve {
       display: none;
     }
@@ -902,6 +940,11 @@
         { id: 5, type: 'instagram', label: 'Instagram', href: '' },
         { id: 6, type: 'youtube', label: 'YouTube', href: '' }
       ],
+      salesSectionTitle: 'المبيعات | Sales',
+      salesTeam: [
+        { id: 1, title: 'مسؤول المبيعات', phone: '+966598861163' },
+        { id: 2, title: 'إدارة المبيعات', phone: '+966598861163' }
+      ],
       partnersSectionTitle: 'شركاؤنا | Our Partners',
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
@@ -958,6 +1001,12 @@
       const normalized = JSON.parse(JSON.stringify(data || fallbackSiteData));
       normalized.programs = Array.isArray(normalized.programs) ? normalized.programs : [];
       normalized.contacts = normalizeContacts(normalized.contacts);
+      normalized.salesTeam = Array.isArray(normalized.salesTeam) ? normalized.salesTeam : JSON.parse(JSON.stringify(fallbackSiteData.salesTeam || []));
+      normalized.salesTeam = normalized.salesTeam.map((member, index) => ({
+        id: member.id || Date.now() + index,
+        title: member.title || '',
+        phone: member.phone || ''
+      }));
       normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
       normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
       normalized.cloud = normalized.cloud || {};
@@ -981,6 +1030,9 @@
       }));
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
+      }
+      if (!normalized.salesSectionTitle) {
+        normalized.salesSectionTitle = 'المبيعات | Sales';
       }
       return normalized;
     }
@@ -1047,6 +1099,20 @@
             ${renderContactIcon(contact.type || 'website')}
           </a>
         `).join('');
+    }
+
+    function renderSalesTeam(salesTeam) {
+      const items = (salesTeam || []).filter((member) => member.title || member.phone);
+      if (items.length === 0) {
+        return '';
+      }
+
+      return items.map((member) => `
+        <article class="sales-card">
+          <h3>${member.title || ''}</h3>
+          ${member.phone ? `<a class="sales-phone" href="tel:${member.phone}">${member.phone}</a>` : ''}
+        </article>
+      `).join('');
     }
 
     function renderPartners(partners) {
@@ -1210,6 +1276,13 @@
           <h2 class="section-title">${data.contactSectionTitle || ''}</h2>
           <div class="contact-grid">${renderContacts(data.contacts)}</div>
         </section>
+
+        ${data.salesTeam?.length ? `
+          <section id="sales" class="sales-section">
+            <h2 class="section-title">${data.salesSectionTitle || ''}</h2>
+            <div class="sales-grid">${renderSalesTeam(data.salesTeam)}</div>
+          </section>
+        ` : ''}
 
         <section id="partners" class="partners-section">
           <h2 class="section-title">${data.partnersSectionTitle || ''}</h2>
