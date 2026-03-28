@@ -199,6 +199,41 @@
       font-size: .92rem;
       margin-top: 10px;
     }
+    .publish-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: #f7fbff;
+      margin-bottom: 14px;
+    }
+    .publish-status {
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-weight: 700;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+    }
+    .publish-status.info {
+      background: #eef6ff;
+      color: var(--primary-2);
+      border: 1px solid #cfe1f8;
+    }
+    .publish-status.pending {
+      background: #fff8e6;
+      color: #8a5a00;
+      border: 1px solid #ffe1a6;
+    }
+    .publish-status.success {
+      background: #edf9f0;
+      color: #166534;
+      border: 1px solid #b7e4c7;
+    }
+    .publish-status.error {
+      background: #fff1f2;
+      color: #b42318;
+      border: 1px solid #fecdd3;
+    }
     .program-block,
     .contact-block {
       border: 1px dashed var(--line);
@@ -276,11 +311,25 @@
     <div id="adminSection" class="admin-section hidden">
       <div class="actions-bar">
         <button class="btn btn-success" onclick="saveLocalData()">حفظ محلي فوري | Save Local Preview</button>
+        <a class="btn btn-primary" href="/?preview=1" target="_blank" rel="noopener">فتح المعاينة | Open Preview</a>
+        <button id="publishLiveButton" class="btn btn-accent" onclick="publishLiveData()">نشر للعامة | Publish Live</button>
         <button class="btn btn-primary" onclick="downloadSiteData()">تنزيل site-data.json</button>
         <a class="btn btn-accent admin-shortcut" href="#announcementsAdminPanel">بنل الإعلانات</a>
         <button class="btn btn-danger" onclick="logout()">خروج | Logout</button>
       </div>
-      <p class="muted-note">الحفظ المحلي يطبّق التغييرات فورًا على هذا الجهاز. ولتطبيقها على كل الزوار، نزّل ملف <code>site-data.json</code> ثم ارفعه إلى المشروع وادفع التغييرات.</p>
+      <div class="publish-panel">
+        <div class="grid-2">
+          <div class="form-group">
+            <label>مفتاح النشر المباشر | Publish Secret</label>
+            <input type="password" id="publishSecret" placeholder="أدخل مفتاح النشر الخاص بك" />
+          </div>
+          <div class="form-group">
+            <label>حالة النشر العام</label>
+            <div id="publishStatus" class="publish-status info">لم يتم تنفيذ نشر عام بعد.</div>
+          </div>
+        </div>
+      </div>
+      <p class="muted-note">الحفظ المحلي يظهر فقط داخل وضع المعاينة عبر <code>?preview=1</code>. زر <code>نشر للعامة</code> ينشر <code>site-data.json</code> لكل الزوار مباشرة بعد إكمال إعداد Netlify وGitHub لمرة واحدة.</p>
 
       <div class="section-card">
         <h2>الإعدادات العامة | General Settings</h2>
@@ -480,7 +529,7 @@
 
       <div class="section-card">
         <h2>ملف النشر | Deployment File</h2>
-        <p class="muted-note">بعد الضغط على زر التنزيل، ارفع ملف <code>site-data.json</code> إلى المشروع ثم ادفع التغييرات إلى GitHub.</p>
+        <p class="muted-note">استخدم زر <code>نشر للعامة</code> كخيار أساسي. تنزيل <code>site-data.json</code> هنا يبقى خيارًا احتياطيًا يدويًا إذا أردت رفع الملف بنفسك.</p>
         <div id="jsonOutput" class="hidden">
           <label>محتوى ملف <code>site-data.json</code></label>
           <textarea id="jsonContent" style="font-family: monospace; direction: ltr; text-align: left; min-height: 240px;"></textarea>
@@ -1121,6 +1170,82 @@
       };
     }
 
+    function persistPreviewData(data) {
+      const nextSiteData = data || gatherSiteData();
+      localStorage.setItem('siteData', JSON.stringify(nextSiteData));
+      localStorage.setItem('partners', JSON.stringify(nextSiteData.partners || []));
+      return nextSiteData;
+    }
+
+    function setPublishStatus(message, statusType = 'info') {
+      const statusElement = document.getElementById('publishStatus');
+      if (!statusElement) {
+        return;
+      }
+
+      statusElement.className = `publish-status ${statusType}`;
+      statusElement.textContent = message;
+    }
+
+    function initializePublishPanel() {
+      const publishSecretField = document.getElementById('publishSecret');
+      if (!publishSecretField) {
+        return;
+      }
+
+      publishSecretField.value = localStorage.getItem('publishSecret') || '';
+      setPublishStatus('لم يتم تنفيذ نشر عام بعد.', 'info');
+    }
+
+    async function publishLiveData() {
+      const publishSecretField = document.getElementById('publishSecret');
+      const publishButton = document.getElementById('publishLiveButton');
+
+      if (!publishSecretField || !publishButton) {
+        return;
+      }
+
+      const publishSecret = publishSecretField.value.trim();
+      if (!publishSecret) {
+        setPublishStatus('أدخل مفتاح النشر المباشر أولاً.', 'error');
+        alert('يرجى إدخال مفتاح النشر المباشر أولاً.');
+        return;
+      }
+
+      siteData = gatherSiteData();
+      persistPreviewData(siteData);
+      localStorage.setItem('publishSecret', publishSecret);
+
+      publishButton.disabled = true;
+      setPublishStatus('جارٍ نشر التعديلات للعامة...', 'pending');
+
+      try {
+        const response = await fetch('/.netlify/functions/publish-site-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            siteData,
+            publishSecret
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(result.error || 'تعذر تنفيذ النشر العام.');
+        }
+
+        setPublishStatus('تم إرسال التعديلات بنجاح. ستظهر للعامة بعد اكتمال النشر على Netlify.', 'success');
+        alert('تم النشر العام بنجاح. انتظر قليلًا حتى يكتمل التحديث على الموقع.');
+      } catch (error) {
+        setPublishStatus(error.message || 'تعذر تنفيذ النشر العام.', 'error');
+        alert(error.message || 'تعذر تنفيذ النشر العام.');
+      } finally {
+        publishButton.disabled = false;
+      }
+    }
+
     function login() {
       const password = document.getElementById('password').value;
       if (password !== ADMIN_PASSWORD) {
@@ -1131,7 +1256,10 @@
       localStorage.setItem('adminLoggedIn', 'true');
       document.getElementById('loginSection').classList.add('hidden');
       document.getElementById('adminSection').classList.remove('hidden');
-      loadInitialData().then(populateForm);
+      loadInitialData().then(() => {
+        populateForm();
+        initializePublishPanel();
+      });
     }
 
     function logout() {
@@ -1306,16 +1434,14 @@
 
     function saveLocalData() {
       siteData = gatherSiteData();
-      localStorage.setItem('siteData', JSON.stringify(siteData));
-      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
-      alert('تم حفظ التغييرات محليًا. افتح الصفحة الرئيسية وستظهر التعديلات على هذا الجهاز.');
+      persistPreviewData(siteData);
+      alert('تم حفظ التغييرات محليًا. افتح المعاينة عبر ?preview=1 لرؤية النسخة المحلية على هذا الجهاز.');
     }
 
     function saveSection(sectionName) {
       siteData = gatherSiteData();
-      localStorage.setItem('siteData', JSON.stringify(siteData));
-      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
-      alert(`تم حفظ قسم ${sectionName} محليًا.`);
+      persistPreviewData(siteData);
+      alert(`تم حفظ قسم ${sectionName} محليًا. افتح المعاينة عبر ?preview=1 لرؤية التحديث.`);
     }
 
     function clearSection(sectionName) {
@@ -1405,15 +1531,13 @@
       }
 
       siteData = gatherSiteData();
-      localStorage.setItem('siteData', JSON.stringify(siteData));
-      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      persistPreviewData(siteData);
       alert(`تم مسح قسم ${sectionName}.`);
     }
 
     function downloadSiteData() {
       siteData = gatherSiteData();
-      localStorage.setItem('siteData', JSON.stringify(siteData));
-      localStorage.setItem('partners', JSON.stringify(siteData.partners || []));
+      persistPreviewData(siteData);
       const jsonData = downloadJsonFile('site-data.json', siteData);
       document.getElementById('jsonOutput').classList.remove('hidden');
       document.getElementById('jsonContent').value = jsonData;
@@ -1423,7 +1547,10 @@
     if (localStorage.getItem('adminLoggedIn') === 'true') {
       document.getElementById('loginSection').classList.add('hidden');
       document.getElementById('adminSection').classList.remove('hidden');
-      loadInitialData().then(populateForm);
+      loadInitialData().then(() => {
+        populateForm();
+        initializePublishPanel();
+      });
     }
   </script>
 </body>

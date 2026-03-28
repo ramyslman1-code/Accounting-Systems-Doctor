@@ -1919,8 +1919,10 @@
 
     async function loadSiteData() {
       let data = null;
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPreviewMode = urlParams.get('preview') === '1';
 
-      const localSiteData = localStorage.getItem('siteData');
+      const localSiteData = isPreviewMode ? localStorage.getItem('siteData') : null;
       if (localSiteData) {
         try {
           data = normalizeSiteData(JSON.parse(localSiteData));
@@ -1940,7 +1942,7 @@
         }
       }
 
-      const savedPartners = localStorage.getItem('partners');
+      const savedPartners = isPreviewMode ? localStorage.getItem('partners') : null;
       if (savedPartners) {
         try {
           const localPartners = JSON.parse(savedPartners);
