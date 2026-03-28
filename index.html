@@ -378,20 +378,49 @@
       margin-top: 16px;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #083d79, #0b4f9c 42%, #0a8f68 100%);
+      background: linear-gradient(120deg, #ff0033, #ff7a00, #ffd500, #25d366, #00c2ff, #2563eb, #7c3aed, #ff0033);
+      background-size: 300% 300%;
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 22px;
       padding: 24px;
       color: #ffffff;
-      box-shadow: 0 18px 40px rgba(11,79,156,.18);
+      box-shadow: 0 18px 40px rgba(59, 76, 202, .22);
+      animation: spectrumShift 14s linear infinite, promoVisibility 12s ease-in-out infinite;
     }
 
     .promo-banner::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top left, rgba(255,255,255,.18), transparent 42%), radial-gradient(circle at bottom right, rgba(255,183,3,.18), transparent 36%);
+      background: radial-gradient(circle at top left, rgba(255,255,255,.22), transparent 42%), radial-gradient(circle at bottom right, rgba(255,255,255,.12), transparent 36%);
       pointer-events: none;
+    }
+
+    @keyframes spectrumShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes promoVisibility {
+      0%, 83.333% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+        pointer-events: auto;
+      }
+      83.334%, 100% {
+        opacity: 0;
+        transform: translateY(-10px) scale(.98);
+        visibility: hidden;
+        pointer-events: none;
+      }
     }
 
     .promo-banner-inner {
@@ -450,22 +479,20 @@
       color: #fff;
       border-radius: 20px;
       min-width: 180px;
+      min-height: 126px;
       padding: 18px 16px;
       text-align: center;
       box-shadow: 0 12px 26px rgba(251,133,0,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .promo-badge strong {
       display: block;
-      font-size: 2rem;
+      font-size: clamp(2.6rem, 5vw, 3.5rem);
       line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .promo-badge span {
-      display: block;
-      font-size: .98rem;
-      font-weight: 800;
+      margin-bottom: 0;
     }
 
     .announcements-grid {
@@ -870,7 +897,6 @@
             </div>
             <div class="promo-badge">
               <strong>25%</strong>
-              <span>خصم لأول 20 عميل</span>
             </div>
           </div>
         </section>
