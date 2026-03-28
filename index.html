@@ -533,6 +533,55 @@
       font-size: .93rem;
     }
 
+    .referral-register-box {
+      margin-bottom: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .referral-register-box h4 {
+      margin: 0 0 8px;
+      color: var(--primary-2);
+      font-size: 1rem;
+    }
+
+    .referral-register-note {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: .93rem;
+    }
+
+    .referral-code-result {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary-2);
+      flex-wrap: wrap;
+    }
+
+    .referral-code-result.active {
+      display: flex;
+    }
+
+    .referral-code-label {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .referral-code-value {
+      font-weight: 900;
+      letter-spacing: .08em;
+      direction: ltr;
+    }
+
     .pos-reserve {
       display: none;
     }
@@ -1337,6 +1386,34 @@
             </article>
 
             <article class="referral-form-card" id="referralFormCard">
+              <div class="referral-register-box">
+                <h4>تسجيل المتعاون والحصول على كود الإحالة</h4>
+                <p class="referral-register-note">إذا لم يكن لديك كود إحالة، أدخل اسمك وجوالك وسيتم إنشاء كود ثابت لك لاستخدامه في كل إحالة لاحقة من نفس الجهاز أو عند إعادة إدخال نفس البيانات.</p>
+                <form id="referralCollaboratorForm" class="request-form">
+                  <div class="field">
+                    <label for="registeredCollaboratorName">اسم المتعاون</label>
+                    <input id="registeredCollaboratorName" name="registeredCollaboratorName" type="text" required />
+                  </div>
+
+                  <div class="field">
+                    <label for="registeredCollaboratorMobile">جوال المتعاون</label>
+                    <input id="registeredCollaboratorMobile" name="registeredCollaboratorMobile" type="tel" required />
+                  </div>
+
+                  <div class="submit-row">
+                    <button class="btn secondary" type="submit">إنشاء كود الإحالة</button>
+                    <button id="copyReferralCodeButton" class="btn primary" type="button" disabled>نسخ الكود</button>
+                  </div>
+                </form>
+
+                <div id="generatedReferralCodeBox" class="referral-code-result">
+                  <div>
+                    <div class="referral-code-label">كود الإحالة الخاص بك</div>
+                    <div id="generatedReferralCodeValue" class="referral-code-value"></div>
+                  </div>
+                </div>
+              </div>
+
               <h3>${data.referralFormTitle || ''}</h3>
               <form id="referralForm" class="request-form">
                 <div class="field">
@@ -1570,16 +1647,117 @@
       return lines.join('\n');
     }
 
+    function hashReferralValue(value) {
+      return [...`${value || ''}`].reduce((result, character) => ((result * 31) + character.charCodeAt(0)) >>> 0, 7);
+    }
+
+    function generateReferralCode(name, mobile) {
+      const normalizedName = `${name || ''}`.trim();
+      const normalizedMobile = `${mobile || ''}`.replace(/\D/g, '');
+      const phoneSuffix = (normalizedMobile.slice(-4) || '0000').padStart(4, '0');
+      const hash = hashReferralValue(`${normalizedName}|${normalizedMobile}`).toString(36).toUpperCase().padStart(5, '0').slice(0, 5);
+      return `REF-${phoneSuffix}-${hash}`;
+    }
+
+    function readStoredReferralCollaborator() {
+      try {
+        const rawValue = localStorage.getItem('referralCollaborator');
+        return rawValue ? JSON.parse(rawValue) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function saveStoredReferralCollaborator(collaborator) {
+      try {
+        localStorage.setItem('referralCollaborator', JSON.stringify(collaborator));
+      } catch (error) {
+      }
+    }
+
     function bindReferralActions(data) {
       const form = document.getElementById('referralForm');
       const whatsappButton = document.getElementById('referralWhatsappButton');
+      const collaboratorForm = document.getElementById('referralCollaboratorForm');
+      const registeredNameField = document.getElementById('registeredCollaboratorName');
+      const registeredMobileField = document.getElementById('registeredCollaboratorMobile');
+      const copyReferralCodeButton = document.getElementById('copyReferralCodeButton');
+      const generatedReferralCodeBox = document.getElementById('generatedReferralCodeBox');
+      const generatedReferralCodeValue = document.getElementById('generatedReferralCodeValue');
+      const partnerNameField = document.getElementById('referralPartnerName');
+      const partnerMobileField = document.getElementById('referralPartnerMobile');
+      const referralCodeField = document.getElementById('referralCode');
 
-      if (!form || !whatsappButton) {
+      if (!form || !whatsappButton || !collaboratorForm || !registeredNameField || !registeredMobileField || !copyReferralCodeButton || !generatedReferralCodeBox || !generatedReferralCodeValue || !partnerNameField || !partnerMobileField || !referralCodeField) {
         return;
       }
 
+      function applyCollaboratorRegistration(collaborator) {
+        if (!collaborator || !collaborator.code) {
+          generatedReferralCodeBox.classList.remove('active');
+          generatedReferralCodeValue.textContent = '';
+          copyReferralCodeButton.disabled = true;
+          return;
+        }
+
+        registeredNameField.value = collaborator.name || '';
+        registeredMobileField.value = collaborator.mobile || '';
+        partnerNameField.value = collaborator.name || '';
+        partnerMobileField.value = collaborator.mobile || '';
+        referralCodeField.value = collaborator.code || '';
+        generatedReferralCodeValue.textContent = collaborator.code || '';
+        generatedReferralCodeBox.classList.add('active');
+        copyReferralCodeButton.disabled = false;
+      }
+
+      function registerCollaborator(name, mobile) {
+        const collaborator = {
+          name: `${name || ''}`.trim(),
+          mobile: `${mobile || ''}`.trim(),
+          code: generateReferralCode(name, mobile)
+        };
+
+        saveStoredReferralCollaborator(collaborator);
+        applyCollaboratorRegistration(collaborator);
+        return collaborator;
+      }
+
+      const storedCollaborator = readStoredReferralCollaborator();
+      if (storedCollaborator) {
+        applyCollaboratorRegistration(storedCollaborator);
+      }
+
+      collaboratorForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        if (!collaboratorForm.reportValidity()) {
+          return;
+        }
+
+        const collaborator = registerCollaborator(registeredNameField.value, registeredMobileField.value);
+        alert(`تم إنشاء كود الإحالة: ${collaborator.code}`);
+      });
+
+      copyReferralCodeButton.addEventListener('click', async () => {
+        const referralCode = generatedReferralCodeValue.textContent.trim();
+        if (!referralCode) {
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(referralCode);
+          alert('تم نسخ كود الإحالة.');
+        } catch (error) {
+          window.prompt('انسخ كود الإحالة التالي:', referralCode);
+        }
+      });
+
       whatsappButton.addEventListener('click', (event) => {
         event.preventDefault();
+
+        if (!referralCodeField.value.trim() && partnerNameField.value.trim() && partnerMobileField.value.trim()) {
+          registerCollaborator(partnerNameField.value, partnerMobileField.value);
+        }
 
         if (!form.reportValidity()) {
           return;
