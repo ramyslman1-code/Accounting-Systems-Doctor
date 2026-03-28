@@ -709,33 +709,47 @@
     <section id="partners" class="partners-section">
       <h2 class="section-title">شركاؤنا | Our Partners</h2>
       <div class="partners-grid" id="partnersContainer">
-        <!-- Partners will be loaded dynamically from partners.json -->
+        
       </div>
     </section>
 
     <script>
-      // Load partners from JSON file
+      function renderPartners(partners) {
+        const container = document.getElementById('partnersContainer');
+        if (!Array.isArray(partners) || partners.length === 0) {
+          container.innerHTML = '<p style="color: var(--muted); text-align: center;">لا يوجد شركاء مضافون بعد.</p>';
+          return;
+        }
+
+        container.innerHTML = partners.map(partner => `
+          <div class="partner-card">
+            <img src="${partner.image}" alt="${partner.name}" />
+            <span class="partner-name">${partner.name}</span>
+          </div>
+        `).join('');
+      }
+
       async function loadPartners() {
+        const savedPartners = localStorage.getItem('partners');
+        if (savedPartners) {
+          try {
+            const localPartners = JSON.parse(savedPartners);
+            if (Array.isArray(localPartners) && localPartners.length > 0) {
+              renderPartners(localPartners);
+              return;
+            }
+          } catch (error) {
+            console.error('Error reading local partners:', error);
+          }
+        }
+
         try {
           const response = await fetch('partners.json');
           if (!response.ok) throw new Error('Failed to load partners');
           const partners = await response.json();
-          
-          const container = document.getElementById('partnersContainer');
-          if (partners.length === 0) {
-            container.innerHTML = '<p style="color: var(--muted); text-align: center;">لا يوجد شركاء مضافون بعد.</p>';
-            return;
-          }
-          
-          container.innerHTML = partners.map(partner => `
-            <div class="partner-card">
-              <img src="${partner.image}" alt="${partner.name}" />
-              <span class="partner-name">${partner.name}</span>
-            </div>
-          `).join('');
+          renderPartners(partners);
         } catch (error) {
           console.error('Error loading partners:', error);
-          // Fallback to default content if JSON fails to load
           document.getElementById('partnersContainer').innerHTML = `
             <div class="partner-card">
               <img src="/taj-albanan-logo.jpeg" alt="" />
@@ -746,8 +760,7 @@
           `;
         }
       }
-      
-      // Load partners when page loads
+
       loadPartners();
     </script>
 
