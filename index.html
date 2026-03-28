@@ -436,6 +436,103 @@
       direction: ltr;
     }
 
+    .referral-section {
+      margin-top: 18px;
+    }
+
+    .referral-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .referral-card,
+    .referral-form-card {
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
+    }
+
+    .referral-card > p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .referral-steps,
+    .referral-products,
+    .referral-terms {
+      margin-top: 18px;
+    }
+
+    .referral-steps-grid,
+    .referral-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .referral-step,
+    .referral-product-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .referral-step strong,
+    .referral-product-card h3,
+    .referral-form-card h3 {
+      display: block;
+      margin: 0 0 8px;
+      color: var(--primary-2);
+      font-size: 1.04rem;
+    }
+
+    .referral-step p,
+    .referral-product-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .referral-commission {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px 0 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary-2);
+      font-weight: 900;
+    }
+
+    .referral-terms ul {
+      margin: 12px 0 0;
+      padding-inline-start: 20px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .referral-cta {
+      margin-top: 18px;
+      display: inline-flex;
+    }
+
+    .referral-form-card .request-form {
+      margin-top: 0;
+    }
+
+    .referral-inline-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
     .pos-reserve {
       display: none;
     }
@@ -837,6 +934,10 @@
       .promo-badge {
         justify-self: start;
       }
+
+      .referral-layout {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -946,6 +1047,27 @@
         { id: 1, title: 'مسؤول المبيعات', phone: '+966598861163' },
         { id: 2, title: 'إدارة المبيعات', phone: '+966598861163' }
       ],
+      referralSectionTitle: 'كن معنا واربح عمولة',
+      referralSectionDescription: 'انضم إلى برنامج الإحالة وساهم في جلب عملاء جدد مقابل عمولة واضحة ومضمونة.',
+      referralButtonText: 'سجّل إحالتك الآن',
+      referralFormTitle: 'بيانات العميل المحال',
+      referralWhatsappHref: 'https://wa.me/966598861163',
+      referralSteps: [
+        { id: 1, title: 'سجل بيانات الإحالة', text: 'أدخل اسمك وكود الإحالة وبيانات العميل داخل النموذج.' },
+        { id: 2, title: 'نراجع العميل ونتواصل معه', text: 'نتأكد من أن العميل جديد ومناسب للخدمة أو المنتج المطلوب.' },
+        { id: 3, title: 'تستحق العمولة بعد البيع', text: 'بعد اكتمال التعاقد وإتمام البيع يتم اعتماد عمولتك.' }
+      ],
+      referralProducts: [
+        { id: 1, title: 'طبيب الجرد | Inventory Doctor', commission: '', note: 'العمولة تختلف حسب المنتج' },
+        { id: 2, title: 'طبيب المحطات | Gas Sales Doctor', commission: '', note: 'العمولة تختلف حسب المنتج' },
+        { id: 3, title: 'طبيب مندوب المبيعات | Salesman Doctor', commission: '', note: 'العمولة تختلف حسب المنتج' },
+        { id: 4, title: 'البرنامج المحاسبي السحابي | Cloud Accounting Program', commission: '', note: 'العمولة تختلف حسب المنتج' }
+      ],
+      referralTerms: [
+        'العمولة بعد إتمام البيع فقط',
+        'العميل يجب أن يكون جديدًا',
+        'تعتمد الإحالة لأول شخص سجّلها'
+      ],
       partnersSectionTitle: 'شركاؤنا | Our Partners',
       partners: [{ id: 1, name: 'تاج البنان لمواد البناء', image: '/taj-albanan-logo.jpeg' }],
       footerText: '© 2026 Accounting Systems Doctor'
@@ -1008,6 +1130,20 @@
         title: member.title || '',
         phone: member.phone || ''
       }));
+      normalized.referralSteps = Array.isArray(normalized.referralSteps) ? normalized.referralSteps : JSON.parse(JSON.stringify(fallbackSiteData.referralSteps || []));
+      normalized.referralSteps = normalized.referralSteps.map((step, index) => ({
+        id: step.id || Date.now() + index,
+        title: step.title || '',
+        text: step.text || ''
+      }));
+      normalized.referralProducts = Array.isArray(normalized.referralProducts) ? normalized.referralProducts : JSON.parse(JSON.stringify(fallbackSiteData.referralProducts || []));
+      normalized.referralProducts = normalized.referralProducts.map((product, index) => ({
+        id: product.id || Date.now() + index,
+        title: product.title || '',
+        commission: product.commission || '',
+        note: product.note || ''
+      }));
+      normalized.referralTerms = Array.isArray(normalized.referralTerms) ? normalized.referralTerms.map((term) => `${term || ''}`.trim()).filter(Boolean) : JSON.parse(JSON.stringify(fallbackSiteData.referralTerms || []));
       normalized.partners = Array.isArray(normalized.partners) ? normalized.partners : [];
       normalized.announcements = Array.isArray(normalized.announcements) ? normalized.announcements : [];
       normalized.cloud = normalized.cloud || {};
@@ -1037,6 +1173,21 @@
       }
       if (!normalized.salesSectionTitle) {
         normalized.salesSectionTitle = 'المبيعات | Sales';
+      }
+      if (!normalized.referralSectionTitle) {
+        normalized.referralSectionTitle = 'كن معنا واربح عمولة';
+      }
+      if (!normalized.referralSectionDescription) {
+        normalized.referralSectionDescription = 'انضم إلى برنامج الإحالة وساهم في جلب عملاء جدد مقابل عمولة واضحة ومضمونة.';
+      }
+      if (!normalized.referralButtonText) {
+        normalized.referralButtonText = 'سجّل إحالتك الآن';
+      }
+      if (!normalized.referralFormTitle) {
+        normalized.referralFormTitle = 'بيانات العميل المحال';
+      }
+      if (!normalized.referralWhatsappHref) {
+        normalized.referralWhatsappHref = 'https://wa.me/966598861163';
       }
       return normalized;
     }
@@ -1119,6 +1270,139 @@
       `).join('');
     }
 
+    function renderReferralSteps(steps) {
+      const items = (steps || []).filter((step) => step.title || step.text);
+      if (items.length === 0) {
+        return '';
+      }
+
+      return `<div class="referral-steps-grid">${items.map((step) => `
+        <article class="referral-step">
+          <strong>${step.title || ''}</strong>
+          <p>${step.text || ''}</p>
+        </article>
+      `).join('')}</div>`;
+    }
+
+    function renderReferralProducts(products) {
+      const items = (products || []).filter((product) => product.title || product.commission || product.note);
+      if (items.length === 0) {
+        return '';
+      }
+
+      return `<div class="referral-products-grid">${items.map((product) => `
+        <article class="referral-product-card">
+          <h3>${product.title || ''}</h3>
+          <span class="referral-commission">${product.commission || 'تحدد لاحقًا'}</span>
+          <p>${product.note || ''}</p>
+        </article>
+      `).join('')}</div>`;
+    }
+
+    function renderReferralTerms(terms) {
+      const items = (terms || []).filter(Boolean);
+      if (items.length === 0) {
+        return '';
+      }
+
+      return `<ul>${items.map((term) => `<li>${term}</li>`).join('')}</ul>`;
+    }
+
+    function renderReferralSection(data) {
+      const productOptions = (data.referralProducts || [])
+        .filter((product) => product.title)
+        .map((product) => `<option value="${product.title}">${product.title}</option>`)
+        .join('');
+
+      return `
+        <section id="referral" class="referral-section">
+          <h2 class="section-title">${data.referralSectionTitle || ''}</h2>
+          <div class="referral-layout">
+            <article class="referral-card">
+              <p>${data.referralSectionDescription || ''}</p>
+
+              <div class="referral-steps">
+                ${renderReferralSteps(data.referralSteps)}
+              </div>
+
+              <div class="referral-products">
+                ${renderReferralProducts(data.referralProducts)}
+              </div>
+
+              <div class="referral-terms">
+                ${renderReferralTerms(data.referralTerms)}
+              </div>
+
+              <a class="btn primary referral-cta" href="#referralFormCard">${data.referralButtonText || ''}</a>
+            </article>
+
+            <article class="referral-form-card" id="referralFormCard">
+              <h3>${data.referralFormTitle || ''}</h3>
+              <form id="referralForm" class="request-form">
+                <div class="field">
+                  <label for="referralPartnerName">اسم المتعاون</label>
+                  <input id="referralPartnerName" name="partnerName" type="text" required />
+                </div>
+
+                <div class="field">
+                  <label for="referralPartnerMobile">رقم جوال المتعاون</label>
+                  <input id="referralPartnerMobile" name="partnerMobile" type="tel" required />
+                </div>
+
+                <div class="field">
+                  <label for="referralCode">كود الإحالة</label>
+                  <input id="referralCode" name="referralCode" type="text" required />
+                </div>
+
+                <div class="field">
+                  <label for="referralCustomerName">اسم العميل</label>
+                  <input id="referralCustomerName" name="customerName" type="text" required />
+                </div>
+
+                <div class="field">
+                  <label for="referralCustomerMobile">جوال العميل</label>
+                  <input id="referralCustomerMobile" name="customerMobile" type="tel" required />
+                </div>
+
+                <div class="field">
+                  <label for="referralCity">المدينة</label>
+                  <input id="referralCity" name="city" type="text" />
+                </div>
+
+                <div class="field">
+                  <label for="referralBusinessType">نوع النشاط</label>
+                  <input id="referralBusinessType" name="businessType" type="text" />
+                </div>
+
+                <div class="field">
+                  <label for="referralRequestedProduct">المنتج المطلوب</label>
+                  <select id="referralRequestedProduct" name="requestedProduct" required>
+                    <option value="">اختر المنتج</option>
+                    ${productOptions}
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="referralExpectedCommission">العمولة المتوقعة</label>
+                  <input id="referralExpectedCommission" name="expectedCommission" type="text" />
+                </div>
+
+                <div class="field full">
+                  <label for="referralNotes">ملاحظات</label>
+                  <textarea id="referralNotes" name="notes" placeholder="أضف أي تفاصيل تساعدنا في متابعة العميل..."></textarea>
+                </div>
+
+                <div class="submit-row">
+                  <button id="referralWhatsappButton" class="btn primary" type="button">${data.referralButtonText || ''}</button>
+                </div>
+              </form>
+              <p class="referral-inline-note">سيتم فتح واتساب مباشرة بالبيانات التي أدخلتها داخل النموذج.</p>
+            </article>
+          </div>
+        </section>
+      `;
+    }
+
     function renderPartners(partners) {
       if (!Array.isArray(partners) || partners.length === 0) {
         return '<p style="color: var(--muted); text-align: center;">لا يوجد شركاء مضافون بعد.</p>';
@@ -1162,6 +1446,145 @@
       return `<div class="demo-links">${items.map(item => `
         <a class="demo-link-item" href="${item.href || '#'}" target="_blank" rel="noopener"><strong>${item.title || 'رابط ديمو'}</strong><span>${item.text || item.href || ''}</span></a>
       `).join('')}</div>`;
+    }
+
+    function buildCloudRequestMessage(formData) {
+      const fields = [
+        ['اسم المنشأة', formData.get('companyName')],
+        ['اسم المسؤول', formData.get('managerName')],
+        ['رقم الجوال', formData.get('mobileNumber')],
+        ['البريد الإلكتروني', formData.get('emailAddress')],
+        ['المدينة', formData.get('city')],
+        ['نوع النشاط', formData.get('businessType')],
+        ['عدد الفروع', formData.get('branches')],
+        ['عدد المستخدمين', formData.get('usersCount')],
+        ['تفاصيل الطلب', formData.get('requirements')]
+      ];
+
+      const lines = ['طلب جديد من نموذج البرنامج السحابي'];
+
+      fields.forEach(([label, value]) => {
+        const normalizedValue = `${value || ''}`.trim();
+        if (normalizedValue) {
+          lines.push(`${label}: ${normalizedValue}`);
+        }
+      });
+
+      return lines.join('\n');
+    }
+
+    function buildWhatsAppMessageUrl(rawHref, message) {
+      const encodedMessage = encodeURIComponent(message || '');
+      const normalizedHref = `${rawHref || ''}`.trim();
+
+      if (!normalizedHref) {
+        return '';
+      }
+
+      const directPhone = normalizedHref.replace(/\D/g, '');
+      if (directPhone && !/^https?:/i.test(normalizedHref)) {
+        return `https://wa.me/${directPhone}?text=${encodedMessage}`;
+      }
+
+      try {
+        const url = new URL(normalizedHref);
+        const phoneParam = `${url.searchParams.get('phone') || ''}`.replace(/\D/g, '');
+        const pathPhone = url.hostname.includes('wa.me') ? url.pathname.replace(/\//g, '').replace(/\D/g, '') : '';
+        const targetPhone = phoneParam || pathPhone;
+
+        if (targetPhone) {
+          return `https://wa.me/${targetPhone}?text=${encodedMessage}`;
+        }
+
+        if (url.hostname.includes('whatsapp.com') || url.hostname.includes('wa.me')) {
+          url.searchParams.set('text', message || '');
+          return url.toString();
+        }
+      } catch (error) {
+        return normalizedHref;
+      }
+
+      return normalizedHref;
+    }
+
+    function bindCloudRequestActions(data) {
+      const form = document.getElementById('cloudRequestForm');
+      const whatsappButton = document.getElementById('cloudWhatsappButton');
+
+      if (!form || !whatsappButton) {
+        return;
+      }
+
+      whatsappButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (!form.reportValidity()) {
+          return;
+        }
+
+        const message = buildCloudRequestMessage(new FormData(form));
+        const whatsappUrl = buildWhatsAppMessageUrl(data.cloud?.mobileButtonHref || '', message);
+
+        if (!whatsappUrl || whatsappUrl === '#') {
+          alert('يرجى إضافة رابط واتساب صحيح من لوحة التحكم أولاً.');
+          return;
+        }
+
+        window.open(whatsappUrl, '_blank', 'noopener');
+      });
+    }
+
+    function buildReferralMessage(formData) {
+      const fields = [
+        ['اسم المتعاون', formData.get('partnerName')],
+        ['رقم جوال المتعاون', formData.get('partnerMobile')],
+        ['كود الإحالة', formData.get('referralCode')],
+        ['اسم العميل', formData.get('customerName')],
+        ['جوال العميل', formData.get('customerMobile')],
+        ['المدينة', formData.get('city')],
+        ['نوع النشاط', formData.get('businessType')],
+        ['المنتج المطلوب', formData.get('requestedProduct')],
+        ['العمولة المتوقعة', formData.get('expectedCommission')],
+        ['ملاحظات', formData.get('notes')]
+      ];
+
+      const lines = ['إحالة جديدة من قسم كن معنا واربح عمولة'];
+
+      fields.forEach(([label, value]) => {
+        const normalizedValue = `${value || ''}`.trim();
+        if (normalizedValue) {
+          lines.push(`${label}: ${normalizedValue}`);
+        }
+      });
+
+      return lines.join('\n');
+    }
+
+    function bindReferralActions(data) {
+      const form = document.getElementById('referralForm');
+      const whatsappButton = document.getElementById('referralWhatsappButton');
+
+      if (!form || !whatsappButton) {
+        return;
+      }
+
+      whatsappButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (!form.reportValidity()) {
+          return;
+        }
+
+        const message = buildReferralMessage(new FormData(form));
+        const whatsappUrl = buildWhatsAppMessageUrl(data.referralWhatsappHref || '', message);
+
+        if (!whatsappUrl || whatsappUrl === '#') {
+          alert('يرجى إضافة رابط واتساب صحيح لقسم الإحالة من لوحة التحكم أولاً.');
+          return;
+        }
+
+        window.open(whatsappUrl, '_blank', 'noopener');
+      });
     }
 
     function renderSite(data) {
@@ -1212,7 +1635,7 @@
             <p>${data.cloud?.description || ''}</p>
             <div class="cloud-badges">${renderBadges(data.cloud?.badges)}</div>
 
-            <form class="request-form" action="${data.cloud?.requestFormAction || 'mailto:doctorsystem8@gmail.com'}" method="post" enctype="text/plain">
+            <form id="cloudRequestForm" class="request-form" action="${data.cloud?.requestFormAction || 'mailto:doctorsystem8@gmail.com'}" method="post" enctype="text/plain">
               <div class="field">
                 <label for="companyName">اسم المنشأة | Company Name</label>
                 <input id="companyName" name="companyName" type="text" required />
@@ -1260,7 +1683,7 @@
 
               <div class="submit-row">
                 <button class="btn primary" type="submit">${data.cloud?.requestButtonText || ''}</button>
-                <a class="btn secondary" href="${data.cloud?.mobileButtonHref || '#'}" target="_blank" rel="noopener">${data.cloud?.mobileButtonText || ''}</a>
+                <a id="cloudWhatsappButton" class="btn secondary" href="${data.cloud?.mobileButtonHref || '#'}" target="_blank" rel="noopener">${data.cloud?.mobileButtonText || ''}</a>
               </div>
             </form>
 
@@ -1287,6 +1710,8 @@
             <div class="sales-grid">${renderSalesTeam(data.salesTeam)}</div>
           </section>
         ` : ''}
+
+        ${renderReferralSection(data)}
 
         <section id="partners" class="partners-section">
           <h2 class="section-title">${data.partnersSectionTitle || ''}</h2>
@@ -1340,6 +1765,8 @@
       }
 
       renderSite(data);
+      bindCloudRequestActions(data);
+      bindReferralActions(data);
     }
 
     loadSiteData();

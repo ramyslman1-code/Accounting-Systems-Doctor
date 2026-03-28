@@ -135,6 +135,59 @@
       "phone": "+966598861163"
     }
   ],
+  "referralSectionTitle": "كن معنا واربح عمولة",
+  "referralSectionDescription": "انضم إلى برنامج الإحالة وساهم في جلب عملاء جدد مقابل عمولة واضحة ومضمونة.",
+  "referralButtonText": "سجّل إحالتك الآن",
+  "referralFormTitle": "بيانات العميل المحال",
+  "referralWhatsappHref": "https://wa.me/966598861163",
+  "referralSteps": [
+    {
+      "id": 1,
+      "title": "سجل بيانات الإحالة",
+      "text": "أدخل اسمك وكود الإحالة وبيانات العميل داخل النموذج." 
+    },
+    {
+      "id": 2,
+      "title": "نراجع العميل ونتواصل معه",
+      "text": "نتأكد من أن العميل جديد ومناسب للخدمة أو المنتج المطلوب." 
+    },
+    {
+      "id": 3,
+      "title": "تستحق العمولة بعد البيع",
+      "text": "بعد اكتمال التعاقد وإتمام البيع يتم اعتماد عمولتك." 
+    }
+  ],
+  "referralProducts": [
+    {
+      "id": 1,
+      "title": "طبيب الجرد | Inventory Doctor",
+      "commission": "",
+      "note": "العمولة تختلف حسب المنتج"
+    },
+    {
+      "id": 2,
+      "title": "طبيب المحطات | Gas Sales Doctor",
+      "commission": "",
+      "note": "العمولة تختلف حسب المنتج"
+    },
+    {
+      "id": 3,
+      "title": "طبيب مندوب المبيعات | Salesman Doctor",
+      "commission": "",
+      "note": "العمولة تختلف حسب المنتج"
+    },
+    {
+      "id": 4,
+      "title": "البرنامج المحاسبي السحابي | Cloud Accounting Program",
+      "commission": "",
+      "note": "العمولة تختلف حسب المنتج"
+    }
+  ],
+  "referralTerms": [
+    "العمولة بعد إتمام البيع فقط",
+    "العميل يجب أن يكون جديدًا",
+    "تعتمد الإحالة لأول شخص سجّلها"
+  ],
   "partnersSectionTitle": "شركاؤنا | Our Partners",
   "partners": [
     {
