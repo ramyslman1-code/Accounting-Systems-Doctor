@@ -922,6 +922,7 @@
         demoLinks: [{ id: 1, title: 'ديمو طبيب المتاجر', text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
       announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
+      featuredAnnouncementDiscount: '25%',
       announcements: [
         {
           id: 1,
@@ -1031,6 +1032,9 @@
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
       }
+      if (!normalized.featuredAnnouncementDiscount) {
+        normalized.featuredAnnouncementDiscount = '25%';
+      }
       if (!normalized.salesSectionTitle) {
         normalized.salesSectionTitle = 'المبيعات | Sales';
       }
@@ -1055,7 +1059,7 @@
       `).join('');
     }
 
-    function renderFeaturedAnnouncement(announcement) {
+    function renderFeaturedAnnouncement(announcement, discountValue) {
       if (!announcement) {
         return '';
       }
@@ -1070,7 +1074,7 @@
               ${announcement.linkHref ? `<a class="promo-cta" href="${announcement.linkHref}" target="_blank" rel="noopener">${announcement.linkText || 'اطلب الآن'}</a>` : ''}
             </div>
             <div class="promo-badge">
-              <strong>25%</strong>
+              <strong>${discountValue || '25%'}</strong>
             </div>
           </div>
         </section>
@@ -1188,7 +1192,7 @@
           </aside>
         </section>
 
-        ${renderFeaturedAnnouncement(data.announcements?.[0])}
+        ${renderFeaturedAnnouncement(data.announcements?.[0], data.featuredAnnouncementDiscount)}
 
         ${data.announcements?.length > 1 ? `
           <section class="announcements-section">

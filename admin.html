@@ -400,6 +400,10 @@
           <label>عنوان قسم الإعلانات | Announcements Section Title</label>
           <input type="text" id="announcementsSectionTitle" />
         </div>
+        <div class="form-group">
+          <label>نسبة الخصم في البنر | Promo Discount</label>
+          <input type="text" id="featuredAnnouncementDiscount" placeholder="مثال: 25%" />
+        </div>
         <div id="announcementsEditor" class="editor-list"></div>
         <div class="actions-bar">
           <button class="btn btn-primary" onclick="addAnnouncement()">إضافة إعلان</button>
@@ -540,6 +544,7 @@
         demoLinks: [{ id: 1, title: 'ديمو طبيب المتاجر', text: 'https://das-erp-demo.vercel.app', href: 'https://das-erp-demo.vercel.app' }]
       },
       announcementsSectionTitle: 'إعلانات الموقع | Site Announcements',
+      featuredAnnouncementDiscount: '25%',
       announcements: [
         {
           id: 1,
@@ -648,6 +653,9 @@
       }));
       if (!normalized.announcementsSectionTitle) {
         normalized.announcementsSectionTitle = 'إعلانات الموقع | Site Announcements';
+      }
+      if (!normalized.featuredAnnouncementDiscount) {
+        normalized.featuredAnnouncementDiscount = '25%';
       }
       if (!normalized.salesSectionTitle) {
         normalized.salesSectionTitle = 'المبيعات | Sales';
@@ -861,6 +869,7 @@
       renderDemoLinksEditor();
 
       document.getElementById('announcementsSectionTitle').value = siteData.announcementsSectionTitle || '';
+      document.getElementById('featuredAnnouncementDiscount').value = siteData.featuredAnnouncementDiscount || '';
       renderAnnouncementsEditor();
 
       document.getElementById('contactSectionTitle').value = siteData.contactSectionTitle || '';
@@ -959,6 +968,7 @@
           demoLinks: collectDemoLinks()
         },
         announcementsSectionTitle: document.getElementById('announcementsSectionTitle').value.trim(),
+        featuredAnnouncementDiscount: document.getElementById('featuredAnnouncementDiscount').value.trim(),
         announcements: collectAnnouncements(),
         contactSectionTitle: document.getElementById('contactSectionTitle').value.trim(),
         contacts: collectContacts(),
@@ -1190,6 +1200,7 @@
 
       if (sectionName === 'announcements') {
         document.getElementById('announcementsSectionTitle').value = '';
+        document.getElementById('featuredAnnouncementDiscount').value = '';
         siteData.announcements = [];
         renderAnnouncementsEditor();
       }
