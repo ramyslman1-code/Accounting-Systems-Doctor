@@ -533,6 +533,16 @@
       font-size: .93rem;
     }
 
+    .referral-access-note {
+      margin: 0;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary-2);
+      line-height: 1.9;
+      font-weight: 700;
+    }
+
     .referral-register-box {
       margin-bottom: 18px;
       border: 1px dashed var(--line);
@@ -1348,6 +1358,10 @@
       `).join('')}</div>`;
     }
 
+    function hasReferralCollaboratorCode(collaborator) {
+      return Boolean(collaborator && `${collaborator.code || ''}`.trim());
+    }
+
     function renderReferralTerms(terms) {
       const items = (terms || []).filter(Boolean);
       if (items.length === 0) {
@@ -1358,6 +1372,7 @@
     }
 
     function renderReferralSection(data) {
+      const hasCommissionAccess = hasReferralCollaboratorCode(readStoredReferralCollaborator());
       const productOptions = (data.referralProducts || [])
         .filter((product) => product.title)
         .map((product) => `<option value="${product.title}">${product.title}</option>`)
@@ -1374,8 +1389,8 @@
                 ${renderReferralSteps(data.referralSteps)}
               </div>
 
-              <div class="referral-products">
-                ${renderReferralProducts(data.referralProducts)}
+              <div id="referralProductsSection" class="referral-products">
+                ${hasCommissionAccess ? renderReferralProducts(data.referralProducts) : '<p id="referralAccessNote" class="referral-access-note">العمولات تظهر فقط للمتعاون الذي لديه كود إحالة. سجّل بياناتك أولاً للحصول على الكود ثم ستظهر لك تفاصيل العمولات.</p>'}
               </div>
 
               <div class="referral-terms">
@@ -1687,9 +1702,19 @@
       const partnerNameField = document.getElementById('referralPartnerName');
       const partnerMobileField = document.getElementById('referralPartnerMobile');
       const referralCodeField = document.getElementById('referralCode');
+      const referralProductsSection = document.getElementById('referralProductsSection');
 
-      if (!form || !whatsappButton || !collaboratorForm || !registeredNameField || !registeredMobileField || !copyReferralCodeButton || !generatedReferralCodeBox || !generatedReferralCodeValue || !partnerNameField || !partnerMobileField || !referralCodeField) {
+      if (!form || !whatsappButton || !collaboratorForm || !registeredNameField || !registeredMobileField || !copyReferralCodeButton || !generatedReferralCodeBox || !generatedReferralCodeValue || !partnerNameField || !partnerMobileField || !referralCodeField || !referralProductsSection) {
         return;
+      }
+
+      function updateCommissionVisibility(collaborator) {
+        if (hasReferralCollaboratorCode(collaborator)) {
+          referralProductsSection.innerHTML = renderReferralProducts(data.referralProducts);
+          return;
+        }
+
+        referralProductsSection.innerHTML = '<p id="referralAccessNote" class="referral-access-note">العمولات تظهر فقط للمتعاون الذي لديه كود إحالة. سجّل بياناتك أولاً للحصول على الكود ثم ستظهر لك تفاصيل العمولات.</p>';
       }
 
       function applyCollaboratorRegistration(collaborator) {
@@ -1697,6 +1722,7 @@
           generatedReferralCodeBox.classList.remove('active');
           generatedReferralCodeValue.textContent = '';
           copyReferralCodeButton.disabled = true;
+          updateCommissionVisibility(null);
           return;
         }
 
@@ -1708,6 +1734,7 @@
         generatedReferralCodeValue.textContent = collaborator.code || '';
         generatedReferralCodeBox.classList.add('active');
         copyReferralCodeButton.disabled = false;
+        updateCommissionVisibility(collaborator);
       }
 
       function registerCollaborator(name, mobile) {
@@ -1723,9 +1750,7 @@
       }
 
       const storedCollaborator = readStoredReferralCollaborator();
-      if (storedCollaborator) {
-        applyCollaboratorRegistration(storedCollaborator);
-      }
+      applyCollaboratorRegistration(storedCollaborator);
 
       collaboratorForm.addEventListener('submit', (event) => {
         event.preventDefault();
