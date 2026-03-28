@@ -449,13 +449,49 @@
       font-size: clamp(1.6rem, 3vw, 2.5rem);
       line-height: 1.25;
       color: #ffffff;
+      display: inline-block;
+      width: max-content;
+      max-width: 100%;
+      text-shadow: 0 6px 20px rgba(0,0,0,.18);
+      animation: promoTitleDrift 6s ease-in-out infinite;
+    }
+
+    .promo-title-wrap {
+      overflow: hidden;
+      display: block;
+      width: 100%;
     }
 
     .promo-banner p {
       margin: 0;
-      color: rgba(255,255,255,.92);
+      color: #0b2450;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 14px;
+      padding: 10px 14px;
       line-height: 1.9;
-      font-size: 1rem;
+      font-size: clamp(1.08rem, 2vw, 1.34rem);
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(8, 37, 80, .14);
+      display: inline-block;
+    }
+
+    @keyframes promoTitleDrift {
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-22px);
+      }
+      50% {
+        transform: translateX(0);
+      }
+      75% {
+        transform: translateX(22px);
+      }
+      100% {
+        transform: translateX(0);
+      }
     }
 
     .promo-cta {
@@ -816,7 +852,7 @@
         {
           id: 1,
           title: 'خصم 25% لأول 20 عميل',
-          text: 'عرض خاص ومحدود على الحلول والأنظمة المحاسبية. احجز الآن واستفد من الخصم قبل اكتمال العدد.',
+          text: 'خصم 25% حتى نهاية عيد الأضحى المبارك',
           linkText: 'اطلب العرض الآن',
           linkHref: 'https://wa.me/966598861163'
         }
@@ -891,7 +927,7 @@
           <div class="promo-banner-inner">
             <div>
               <span class="promo-eyebrow">عرض حصري | Limited Offer</span>
-              <h2>${announcement.title || ''}</h2>
+              <div class="promo-title-wrap"><h2>${announcement.title || ''}</h2></div>
               <p>${announcement.text || ''}</p>
               ${announcement.linkHref ? `<a class="promo-cta" href="${announcement.linkHref}" target="_blank" rel="noopener">${announcement.linkText || 'اطلب الآن'}</a>` : ''}
             </div>
