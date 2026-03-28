@@ -1507,6 +1507,16 @@
       return normalizedHref;
     }
 
+    function openWhatsAppConversation(whatsappUrl) {
+      const openedWindow = window.open(whatsappUrl, '_blank', 'noopener');
+
+      if (openedWindow) {
+        return;
+      }
+
+      window.location.href = whatsappUrl;
+    }
+
     function bindCloudRequestActions(data) {
       const form = document.getElementById('cloudRequestForm');
       const whatsappButton = document.getElementById('cloudWhatsappButton');
@@ -1530,7 +1540,7 @@
           return;
         }
 
-        window.open(whatsappUrl, '_blank', 'noopener');
+        openWhatsAppConversation(whatsappUrl);
       });
     }
 
@@ -1583,7 +1593,7 @@
           return;
         }
 
-        window.open(whatsappUrl, '_blank', 'noopener');
+        openWhatsAppConversation(whatsappUrl);
       });
     }
 
