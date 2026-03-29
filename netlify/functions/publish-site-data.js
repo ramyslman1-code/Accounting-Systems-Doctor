@@ -33,7 +33,7 @@ exports.handler = async (event) => {
   const githubOwner = `${process.env.GITHUB_OWNER || 'ramyslman1-code'}`.trim();
   const githubRepo = `${process.env.GITHUB_REPO || 'Accounting-Systems-Doctor'}`.trim();
   const githubBranch = `${process.env.GITHUB_BRANCH || 'main'}`.trim() || 'main';
-  const publishSecret = `${process.env.PUBLISH_SECRET || ''}`.trim();
+  const publishSecret = '1fb44f15c7785d9417422078f099a7b1b8eaa90ec0b5d74ab0483766e8b304eb';
 
   if (!githubToken || !publishSecret) {
     return jsonResponse(500, {
