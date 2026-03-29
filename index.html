@@ -1959,7 +1959,9 @@
 
       if (!data) {
         try {
-          const response = await fetch('site-data.json');
+          // Add cache-busting to always get fresh data
+          const cacheBuster = `?t=${Date.now()}`;
+          const response = await fetch(`site-data.json${cacheBuster}`);
           if (!response.ok) throw new Error('Failed to load site data');
           data = normalizeSiteData(await response.json());
         } catch (error) {
