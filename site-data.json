@@ -90,7 +90,15 @@
   },
   "announcementsSectionTitle": "",
   "featuredAnnouncementDiscount": "",
-  "announcements": [],
+  "announcements": [
+    {
+      "id": 1783898490090,
+      "title": "",
+      "text": "",
+      "linkText": "",
+      "linkHref": ""
+    }
+  ],
   "contactSectionTitle": "قنوات التواصل | Contact Channels",
   "contacts": [
     {
