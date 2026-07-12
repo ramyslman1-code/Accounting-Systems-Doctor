@@ -90,15 +90,7 @@
   },
   "announcementsSectionTitle": "إعلانات الموقع | Site Announcements",
   "featuredAnnouncementDiscount": "",
-  "announcements": [
-    {
-      "id": 1774700836786,
-      "title": "",
-      "text": "",
-      "linkText": "",
-      "linkHref": ""
-    }
-  ],
+  "announcements": [],
   "contactSectionTitle": "قنوات التواصل | Contact Channels",
   "contacts": [
     {
